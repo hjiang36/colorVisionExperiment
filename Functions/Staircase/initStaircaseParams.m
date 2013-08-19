@@ -29,15 +29,16 @@ stairParams.alternativeVarValues    = ['1' '2'];
 % Decision keys
 stairParams.responseSet             = 'zx';
 
+% Parameter for each staircase separately
+stairParams.curStairVars            = {'direction',...
+    [0 30 45 75 105 120 135 150 -30 -45 -75 -105 -120 -135 -150]};
+
 % Variable adjusted by staircase
 stairParams.adjustableVarName       = 'dContrast';
 stairParams.adjustableVarValues     = 0.05:0.05:2;
 stairParams.adjustableVarStart      = ...
             repmat(13, size(stairParams.curStairVars{2}));
 
-% Parameter for each staircase separately
-stairParams.curStairVars            = {'direction',...
-    [0 30 45 75 105 120 135 150 -30 -45 -75 -105 -120 -135 -150]};
 
 % Randomly vary the value
 stairParams.randomVars              = {'matchFirstOrSecond', [1 2]};  

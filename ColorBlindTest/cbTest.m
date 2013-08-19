@@ -21,18 +21,13 @@
 
 
 AssertOpenGL;
-if (exist('./ColorTable.txt','file'))
-    delete('ColorTable.txt');
-end
 
-%% initialize parameters for display, staircase, stimulus, and subject
-
-display          = cbInitDisplay;
-
-stimParams       = cbInitStimParams(display);
-display          = cbInitFixParams(display, stimParams);
-stairParams      = cbInitStaircaseParams;
-dataDir          = cbInitDataDir;
+%% Initialize parameters for display, staircase, stimulus, and subject
+display          = initDisplay;
+stimParams       = initStimParams('Gsig',10);
+display          = initFixParams(display,0.25);
+stairParams      = initStaircaseParams;
+dataDir          = initDataDir;
 subjectParams    = getSubjectParams(dataDir);
 
 priorityLevel    = 0;
@@ -59,8 +54,7 @@ instructions{5} = 'Press any key to continue';
 stairParams.customInstructions = ['pressKey2Begin(display,0,false,''' cell2mat(instructions) ''')'];
 
 %% do the staircase
-tic;
-display = openScreen(display,hideCursor);
+display    = openScreen(display,'hideCursor',false);
 newDataSum = doStaircase(display, stairParams, stimParams, trialGenFuncName, ...
     priorityLevel, logFID);
 display = closeScreen(display);
