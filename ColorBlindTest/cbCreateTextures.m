@@ -15,8 +15,8 @@ function stimulus = cbCreateTextures(display, stimulus, removeImages)
 %If you're trying to create an texture starting at something
 %other than the first image, use addTextures.
 
-%2005/06/09   SOD: ported from createImagePointers
-%31102005    fwc:	changed display.screenNumber into display.windowPtr
+%2005/06/09   SOD:  ported from createImagePointers
+%2005/10/31   FWC:	changed display.screenNumber into display.windowPtr
 if notDefined('removeImages'),      removeImages = 1;       end
 
 nImages = length(stimulus);
