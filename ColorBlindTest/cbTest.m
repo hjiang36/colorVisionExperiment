@@ -24,14 +24,16 @@ AssertOpenGL;
 
 %% Initialize parameters for display, staircase, stimulus, and subject
 display          = initDisplay;
+if isempty(display), return; end
+
 stimParams       = initStimParams('Gsig',10);
-display          = initFixParams(display,0.25);
+display          = initFixParams(display,0.25); % fixation fov to 0.25
 stairParams      = initStaircaseParams;
 dataDir          = initDataDir;
 subjectParams    = getSubjectParams(dataDir);
 
 priorityLevel    = 0;
-trialGenFuncName = 'cbTrialDetection'; %function called by doStaircase to make stimuli
+trialGenFuncName = 'cbTrialDetection'; 
 
 %% Subject data and log file
 if exist(fullfile(dataDir,[subjectParams.name '.log']),'file')
@@ -53,24 +55,25 @@ instructions{4} = 'If your answer is correct, you will hear a cheering sound. If
 instructions{5} = 'Press any key to continue';
 stairParams.customInstructions = ['pressKey2Begin(display,0,false,''' cell2mat(instructions) ''')'];
 
-%% do the staircase
+%% Do the staircase
+%  open screen
 display    = openScreen(display,'hideCursor',false);
-newDataSum = doStaircase(display, stairParams, stimParams, trialGenFuncName, ...
-    priorityLevel, logFID);
+
+%  do staircase
+newDataSum = doStaircase(display, stairParams, stimParams, ...
+    trialGenFuncName, priorityLevel, logFID);
+
+%  close screen
 display = closeScreen(display);
-timeUsed = toc;
-
-disp(['Test Time: ' num2str(timeUsed)]);
-
 fclose(logFID(1));
 
 %% Visualize Data
-if exist('ColorTable.txt','file')
-    colorHistory = csvread('ColorTable.txt');
-    cbPlot(newDataSum,stairParams,...
-        fullfile(dataDir,[subjectParams.name '.log']),...
-        colorHistory,stimParams.Type);
-end
+% if exist('ColorTable.txt','file')
+%     colorHistory = csvread('ColorTable.txt');
+%     cbPlot(newDataSum,stairParams,...
+%         fullfile(dataDir,[subjectParams.name '.log']),...
+%         colorHistory,stimParams.Type);
+% end
 
 
 

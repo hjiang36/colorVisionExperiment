@@ -34,7 +34,8 @@ if ~isempty(dispName)
         display   = loadDisplayParams(dispName);
     end
 else
-    display = selectDisplay;
+    [display, ok] = selectDisplay;
+    if ~ok, return; end
     display = loadDisplayParams(display);
 end
 
@@ -43,4 +44,4 @@ end
 %% Set experiment parameters
 display.screenNumber = max(Screen('Screens'));
 display.radius       = pix2angle(display,floor(min(display.numPixels)/2));
-display.backColorRgb = [0.5 0.5 0.5]'; % set it to gray, use float number
+display.backColorRgb = [0.5 0.5 0.5]'*255; % set it to gray

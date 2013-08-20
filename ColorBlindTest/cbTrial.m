@@ -8,11 +8,8 @@ function [trial, data] = cbTrial(display, stimParams, ~)
 % 
 % Written by HJ, 11/2012 : Adopted from cocTrial
 
-
-% showProgessDots     = false; 
-duration.stimframe  = stimParams.stimframe;
 sequence            = cbTrialImageSequence(display, stimParams);
-timing              = (1:length(sequence))'.*duration.stimframe;
+timing              = (1:length(sequence))'.*stimParams.stimframe;
 cmap                = display.gammaTable;
 fixSeq              = ones(size(sequence));
 

@@ -24,13 +24,10 @@ end
 stimParams.cbType = 0;
 
 % size of stimulus
-stimParams.radius = 2; %(deg)
-
-% duration of stimulus presentation
-stimParams.duration = 1; % seconds
+stimParams.visualSize = [4 2]; %(deg)
 
 % gapSize
-stimParams.gapSize = 1/8;
+stimParams.gapSize = 1/4;
 
 % Spacial Blur
 stimParams.Gsig = 5;
