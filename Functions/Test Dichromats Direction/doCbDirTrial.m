@@ -15,7 +15,7 @@ function ang = doCbDirTrial(display, winPtr, cbParams)
 %    ang = doCbDirTrial(display, winPtr, cbParams)
 %
 %  See Also:
-%    cbTestDirection
+%    cbTestDirection, RGBForContrastChange
 %
 %  (HJ) Aug, 2013
 
@@ -47,7 +47,7 @@ while true
     if iscell(keyCode), continue; end
     switch KbName(keyCode)
         case 'Return' % Confirm and submit
-            WaitSecs(0.1);
+            WaitSecs(0.2);
             break;
         case 'LeftArrow' % Change color
             curAngle = mod(curAngle - 1/180 * pi, 2*pi);

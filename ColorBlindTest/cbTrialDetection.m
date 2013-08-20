@@ -22,13 +22,8 @@ if nargin < 1, error('Display structure required'); end
 if nargin < 2, error('Stimulus parameter structure required'); end
 
 %% Init parameters
-%  Should be changed here
-%  cbTrialImageSequence should be updated
-sequence            = cbTrialImageSequence(display, stimParams);
-timing              = (1:length(sequence))'*stimParams.stimframe;
-cmap                = displayGet(display,'gamma table');
-fixSeq              = ones(size(sequence));
-
+%  Load gamma table
+cmap = displayGet(display,'gamma table');
 
 %% Make reference stim
 %  Compute size for one patch
@@ -36,11 +31,11 @@ patchWidth  = angle2pix(display, stimParams.visualSize(2));
 patchHeight = angle2pix(display, stimParams.visualSize(1));
 
 %  Compute stimulus size (2 patches + 1 gap)
-stimWidth   = round(2*patchWidth/(1-stimParams.gapSize));
-stimHeight  = patchHeight; %(height in pixels)
+stimWidth   = round(2*patchWidth/(1-stimParams.gapSize)); % width in pix
+stimHeight  = patchHeight; % height in pix
 
 %  Init reference image
-cbColor = [127 127 127]; % same as bg color
+cbColor = stimParams.refColor;
 cbIm    = repmat(reshape(cbColor,[1 1 3]),stimHeight,stimWidth);
 
 %  Compute gap position
@@ -60,29 +55,29 @@ if stimParams.Gsig > 0
 end
 
 %% Make match stimulus
-matchParams         = stimParams;
-matchParams.gapL    = gapL;
-matchParams.gapR    = gapR;
-matchParams.bgColor = display.backColorRgb(1);
-matchParams.type    = stimParams.Type;
-matchParams.color   = cbColor;
-matchIm             = cbSingleFrame(matchParams,cbIm);
-matchStim           = createStimulusStruct(matchIm,cmap,sequence,[],timing,fixSeq);
-matchStim           = cbCreateTextures(display, matchStim);
+%  Set computed parameters
+stimParams.gapL    = gapL;
+stimParams.gapR    = gapR;
+stimParams.bgColor = display.backColorRgb;
+stimParams.cbType  = stimParams.cbType;
+
+matchIm            = cbSingleFrame(stimParams,cbIm); % Change the name for this one
+matchStim          = createStimulusStruct(matchIm,cmap); % Could get rid of this, right?
+matchStim          = cbCreateTextures(display, matchStim); % This one should be changed, create another routine?
 
 %% Make blank stimulus
-blankIm         = cbIm;
-blankIm(:,:,:)  = display.backColorRgb(1);
-col = fixSeq(1) +1; %fixSeq(1) keeps the pos the same as for the edge stimuli and +3 changes the color
-blankStim   = createStimulusStruct(blankIm,cmap,1,[], [], col);
-blankStim   = createTextures(display, blankStim);
-isi.sound   = soundFreqSweep(500, 1000, .05);
+blankIm   = repmat(reshape(stimParams.bgColor,[1 1 3]),...
+                   stimHeight,stimWidth);
+blankStim = createStimulusStruct(blankIm,cmap);
+blankStim = createTextures(display, blankStim); % Should be simplified also
+isi.sound = soundFreqSweep(500, 1000, .05);
 
 
 %% Build the trial events
 trial = addTrialEvent(display,[],'soundEvent',isi );
 trial = addTrialEvent(display,trial,'stimulusEvent', 'stimulus', matchStim);
-trial = addTrialEvent(display,trial,'ISIEvent', 'stimulus', blankStim, 'duration', 0.01);
+trial = addTrialEvent(display,trial,'ISIEvent', 'stimulus', blankStim,...
+                                    'duration', 0.1);
 
 status = 'done';
 end

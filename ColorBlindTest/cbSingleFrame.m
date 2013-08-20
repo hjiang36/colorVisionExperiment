@@ -13,7 +13,7 @@ function matchIm = cbSingleFrame(stimulus,cbIm)
 %         cbType = 0;
 % end
 
-originalColor.dir   = stimulus.color'/255-0.5;
+originalColor.dir   = stimulus.refColor'-stimulus.bgColor';
 originalColor.scale = 1;
 originalContrast  = RGB2ConeContrast(stimulus,originalColor);
 deltaE            = stimulus.deltaE;
