@@ -1,4 +1,4 @@
-function matchIm = cbSingleFrame(stimulus,cbIm)
+function matchIm = cbSingleFrame(display, stimulus, cbIm)
 % function [matchIm] = cocSingleFrame(stimulus, display)
         
 % Adjust the image according to the experiment type
@@ -13,20 +13,20 @@ function matchIm = cbSingleFrame(stimulus,cbIm)
 %         cbType = 0;
 % end
 
-originalColor.dir   = stimulus.refColor'-stimulus.bgColor';
+originalColor.dir   = stimulus.refColor - stimulus.bgColor;
 originalColor.scale = 1;
-originalContrast  = RGB2ConeContrast(stimulus,originalColor);
-deltaE            = stimulus.deltaE;
+originalContrast    = RGB2ConeContrast(display,originalColor);
+dContrast           = stimulus.dContrast;
 %dir               = [0 0 1]';
 ang = stimulus.direction*pi/180;
 dir = [cos(ang) sin(ang) 0];
 
-matchContrast.dir = originalContrast + deltaE*dir'/100;
+matchContrast.dir = originalContrast + dContrast*dir'/100;
 matchContrast.scale = max(abs(matchContrast.dir));
 matchContrast.dir = matchContrast.dir / matchContrast.scale;
 
-tt = cone2RGB(stimulus,matchContrast);
-matchColor = (0.5+tt.scale*tt.dir)*255;
+tt = cone2RGB(display,matchContrast);
+matchColor = 0.5+tt.scale*tt.dir;
 %matchColor(matchColor<0) = 0;
 %matchColor(matchColor>255) = 255;
 
@@ -55,7 +55,10 @@ im              = cbIm;
 gapL            = stimulus.gapL;
 gapR            = stimulus.gapR;
 
-im(:,gapL+1:gapR,:)      = stimulus.bgColor;
+for i = 1 : 3
+    im(:,gapL+1:gapR,i)      = stimulus.bgColor(i); % Why shall I do this
+end
+
 if stimulus.MatchingSlot == '1'%(rand > 0.5)
     im(:,1:gapL,1)   = matchColor(1);
     im(:,1:gapL,2)   = matchColor(2);
@@ -68,7 +71,7 @@ end
 
 if stimulus.Gsig > 0
     gFilter = fspecial('Gaussian',[10 10],stimulus.Gsig);
-    im    = imfilter(im, gFilter, 'same', stimulus.bgColor);
+    im    = imfilter(im, gFilter, 'same', 0.5); % Should update 0.5 to something
 end
 
 matchIm{1} = im;

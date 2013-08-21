@@ -62,7 +62,6 @@ while true
     imgTex        = Screen('MakeTexture',winPtr,colorImg, 0, 0, 2);
     Screen('DrawTexture', winPtr, imgTex);
     Screen('Flip', winPtr);
-    WaitSecs(0.025);
 end
 ang = curAngle;
 

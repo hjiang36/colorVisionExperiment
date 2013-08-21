@@ -49,7 +49,7 @@ end
 subjectInfo = getSubjectParams();
 
 %  Set fixed parameters
-if ~isfield(cbParams, 'nTrials'),  cbParams.nTrials  = 3; end
+if ~isfield(cbParams, 'nTrials'),  cbParams.nTrials  = 20; end
 if ~isfield(cbParams, 'bgColor'),  cbParams.bgColor  = [0.5 0.5 0.5]; end
 if ~isfield(cbParams, 'refColor'), cbParams.refColor = [0.5 0.5 0.5]; end
 
