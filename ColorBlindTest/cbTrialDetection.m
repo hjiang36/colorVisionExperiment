@@ -23,10 +23,11 @@ if nargin < 1, error('Display structure required'); end
 if nargin < 2, error('Stimulus parameter structure required'); end
 
 %% Init parameters
-%  Load gamma table
-cmap = displayGet(display,'gamma table');
+cmap  = displayGet(display,'gamma table');
+angle = deg2rad(stimParams.direction);
+dir   = [cos(angle) sin(angle) 0]'; % should put 100 to stimParams
 
-%% Make reference stim
+%% Make stimulus image with gap & reference color
 %  Compute size for one patch
 patchWidth  = angle2pix(display, stimParams.visualSize(2));
 patchHeight = angle2pix(display, stimParams.visualSize(1));
@@ -39,11 +40,12 @@ stimHeight  = patchHeight; % height in pix
 stimParams.bgColor = display.backColorRgb;
 if max(stimParams.bgColor) > 1
     stimParams.bgColor = stimParams.bgColor / 255; % Assume 8 bit here
+    assert(all(stimParams.bgColor>=0 & stimParams.bgColor<=1)); 
 end
 
 %  Init reference image
-cbColor = stimParams.refColor;
-cbIm    = repmat(reshape(cbColor,[1 1 3]),stimHeight,stimWidth);
+refColor  = stimParams.refColor;
+stimImg   = repmat(reshape(refColor,[1 1 3]),stimHeight,stimWidth);
 
 %  Compute gap position
 gapSize = stimParams.gapSize;
@@ -52,36 +54,52 @@ gapR    = floor((0.5+gapSize/2)*stimWidth);
 
 %  Set gap color
 for i = 1 : 3
-    cbIm(:, gapL +1:gapR,i)  = stimParams.bgColor(i);
-end
-
-%  Blur stimulus if needed
-if stimParams.Gsig > 0
-    gFilter = fspecial('Gaussian',[10 10],stimParams.Gsig);
-    cbIm    = imfilter(cbIm, gFilter,'same', 0.5); % Should update here, 0.5 to something
+    stimImg(:, gapL +1:gapR,i)  = stimParams.bgColor(i);
 end
 
 %% Make match stimulus
-%  Set computed parameters
-stimParams.gapL    = gapL;
-stimParams.gapR    = gapR;
-stimParams.cbType  = stimParams.cbType;
+%  Compute match color
+refContrast    = RGB2ConeContrast(display,refColor);
+matchContrast  = refContrast + stimParams.dContrast*dir;
+matchColor     = coneContrast2RGB(display,matchContrast);
 
-matchIm            = cbSingleFrame(display, stimParams,cbIm); % Change the name for this one
-matchStim          = createStimulusStruct(matchIm,cmap); % Could get rid of this, right?
-matchStim          = cbCreateTextures(display, matchStim); % This one should be changed, create another routine?
+%  Set color to corresponding positions in stimIm
+if stimParams.MatchingSlot == '1' % Set to left
+    stimImg(:,1:gapL,1)   = matchColor(1);
+    stimImg(:,1:gapL,2)   = matchColor(2);
+    stimImg(:,1:gapL,3)   = matchColor(3);
+else % Set to right
+    stimImg(:,gapR+1:end,1) = matchColor(1);
+    stimImg(:,gapR+1:end,2) = matchColor(2);
+    stimImg(:,gapR+1:end,3) = matchColor(3);
+end
+
+%%  Blur stimulus if needed
+if stimParams.Gsig > 0
+    gFilter = fspecial('Gaussian',[10 10],stimParams.Gsig);
+    stimImg = imfilter(stimImg, gFilter,'same', 0.5); % should update 0.5 to something
+end
+
+%%  Create trial stimulus structure
+stimulus = createStimulusStruct(stimImg,cmap); % should pass in timing
+
+% Possibly, I should create a createTextures routine here
+stimulus.textures=Screen('MakeTexture',display.windowPtr,stimImg,[],[],2);
+stimulus.images = []; % free space for images
 
 %% Make blank stimulus
 blankIm   = repmat(reshape(stimParams.bgColor,[1 1 3]),...
                    stimHeight,stimWidth);
 blankStim = createStimulusStruct(blankIm,cmap);
-blankStim = createTextures(display, blankStim); % Should be simplified also
+blankStim.textures=Screen('MakeTexture',display.windowPtr,blankIm,[],[],2);
+
+
 isi.sound = soundFreqSweep(500, 1000, .05);
 
 
 %% Build the trial events
 trial = addTrialEvent(display,[],'soundEvent',isi );
-trial = addTrialEvent(display,trial,'stimulusEvent', 'stimulus', matchStim);
+trial = addTrialEvent(display,trial,'stimulusEvent', 'stimulus', stimulus);
 trial = addTrialEvent(display,trial,'ISIEvent', 'stimulus', blankStim,...
                                     'duration', 0.1);
 
