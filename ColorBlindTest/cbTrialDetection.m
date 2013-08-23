@@ -81,7 +81,11 @@ if stimParams.Gsig > 0
 end
 
 %%  Create trial stimulus structure
-stimulus = createStimulusStruct(stimImg,cmap); % should pass in timing
+if ~isfield(stimParams, 'duration')
+    stimParams.duration = [];
+end
+
+stimulus = createStimulusStruct(stimImg,cmap,[],stimParams.duration);
 
 % Possibly, I should create a createTextures routine here
 stimulus.textures=Screen('MakeTexture',display.windowPtr,stimImg,[],[],2);
@@ -101,7 +105,7 @@ isi.sound = soundFreqSweep(500, 1000, .05);
 trial = addTrialEvent(display,[],'soundEvent',isi );
 trial = addTrialEvent(display,trial,'stimulusEvent', 'stimulus', stimulus);
 trial = addTrialEvent(display,trial,'ISIEvent', 'stimulus', blankStim,...
-                                    'duration', 0.1);
+                                    'duration', 0.5);
 
 status = 'done';
 end

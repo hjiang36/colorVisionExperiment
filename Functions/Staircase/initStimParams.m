@@ -3,7 +3,8 @@ function stimParams = initStimParams(varargin)
 %    initialize stimulus parameters
 %
 %  Input:
-%    varargin   - name value pair
+%    varargin   - name value pair, could be anything you want to be saved
+%                 in stimParams
 %  
 %  Output:
 %    stimParams - stimulus structure
@@ -31,6 +32,9 @@ stimParams.gapSize = 1/4;
 
 % Spacial Blur
 stimParams.Gsig = 5;
+
+% duration of stimulus presentation
+stimParams.duration = 0.5; % seconds
 
 % init reference color
 stimParams.refColor = [0.5 0.5 0.5]';
