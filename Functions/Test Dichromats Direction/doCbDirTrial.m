@@ -9,7 +9,7 @@ function ang = doCbDirTrial(display, winPtr, cbParams)
 %    cbParams - Experiment parameters, 
 %
 %  Outputs:
-%    ang      - User selected angle
+%    ang      - User selected angle in radiance
 %
 %  Example:
 %    ang = doCbDirTrial(display, winPtr, cbParams)
@@ -68,13 +68,7 @@ ang = curAngle;
 end % end of main function
 
 function matchRGB = RGBForContrastChange(display,refRGB,bgRGB,deltaContrast)
-    refContrast   = RGB2ConeContrast(display,...
-        color2struct(refRGB - bgRGB));
+    refContrast   = RGB2ConeContrast(display,refRGB,bgRGB);
     matchContrast = refContrast + deltaContrast;
-    matchStim     = cone2RGB(display,color2struct(matchContrast));
-    if max(bgRGB) > 1
-        matchRGB      = bgRGB' + matchStim.dir*matchStim.scale*255;
-    else
-        matchRGB      = bgRGB' + matchStim.dir*matchStim.scale;
-    end
+    matchRGB      = coneContrast2RGB(display,matchContrast,bgRGB);
 end

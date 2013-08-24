@@ -12,6 +12,7 @@ function [angle, cbParams] = cbTestDirection(cbParams, varargin)
 %
 %  Output:
 %    angle    - angle vector of each trial result
+%    cbParams - parameters used for colorblind direction test
 %
 %  See also:
 %    doCbDirTrial
@@ -49,7 +50,7 @@ end
 subjectInfo = getSubjectParams();
 
 %  Set fixed parameters
-if ~isfield(cbParams, 'nTrials'),  cbParams.nTrials  = 20; end
+if ~isfield(cbParams, 'nTrials'),  cbParams.nTrials  = 5; end
 if ~isfield(cbParams, 'bgColor'),  cbParams.bgColor  = [0.5 0.5 0.5]; end
 if ~isfield(cbParams, 'refColor'), cbParams.refColor = [0.5 0.5 0.5]; end
 
@@ -71,17 +72,16 @@ angle = zeros(cbParams.nTrials,1);
 
 %% Init PsychToolbox Window
 %  Load display
-display  = cbInitDisplay;
+display  = initDisplay;
 display.backColorRgb = cbParams.bgColor*255;
 
 display   = openScreen(display,'hideCursor',false, 'bitDepth',bitDepth);
-winPtr    = display.windowPtr;
 
 %% Start Trial
 for curTrial = 1 : cbParams.nTrials
      cbParams.curTrial = curTrial;
      % Do trial
-     angle(curTrial) = doCbDirTrial(display, winPtr, cbParams);
+     angle(curTrial) = doCbDirTrial(display, display.windowPtr, cbParams);
 end
 
 %% Close PsychToolbox Window
@@ -89,18 +89,29 @@ closeScreen(display);
 
 %% Plot
 if showPlot
+    % Init figure
+    figure('Name',['Colorblind Direction Test - ' subjectInfo.name],...
+        'NumberTitle','off',...
+        'Resize','on'); 
+    grid on; axis equal; hold on;
+    % Plot data
+    plot(cos(angle).*cbParams.dist, sin(angle).*cbParams.dist, '.r');
+    % Set axis info to plot
+    title('Colorblind Direction Test');
+    xlabel('L-contrast');
+    ylabel('M-contrast');
 end
 
 %% Send Results
 if ~isempty(sendResult)
     %  Save results to file
     dataFileName = ['ColorDirection_' subjectInfo.name '.mat'];
-    save(dataFileName,angle,cbParams,subjectInfo);
+    save(dataFileName,'angle','cbParams','subjectInfo');
     
     %  Send results via email
     sendMailAsHJ(sendResult, ...
-             ['Color Vision Exp Data for' subjectInfo.name], ...
-             ['Experiment finished on' date '. Data is attached'],...
+             ['Color Vision Exp Data for ' subjectInfo.name], ...
+             ['Experiment finished on ' date '. Data is attached'],...
              dataFileName);
     
     %  Delete result file
