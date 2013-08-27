@@ -20,7 +20,7 @@ end
 
 %% Initialize default values
 %  Name of experiment
-stairParams.experimentName          = {'Color Detection'};
+stairParams.experimentName          = {'Color Vision Experiment'};
 
 % Alternative variable
 stairParams.alternativeVarName      = 'MatchingSlot';
@@ -36,6 +36,8 @@ stairParams.curStairVars            = {'direction',...
 % Variable adjusted by staircase
 stairParams.adjustableVarName       = 'dContrast';
 stairParams.adjustableVarValues     = 0.05:0.05:2;
+
+% Set starting value, use 13 here
 stairParams.adjustableVarStart      = ...
             repmat(13, size(stairParams.curStairVars{2}));
 
@@ -64,7 +66,7 @@ stairParams.feedback                = 'auditory'; %{'none')
 stairParams.showTiming              = false;
 
 % intertrial interval in seconds
-stairParams.iti      = 0.3;
+stairParams.iti      = 0.1;
 
 %% Parse varargin and set to stairParams
 for i = 1 : 2 : length(varargin)
