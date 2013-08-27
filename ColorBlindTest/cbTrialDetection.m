@@ -25,7 +25,13 @@ if nargin < 2, error('Stimulus parameter structure required'); end
 %% Init parameters
 cmap  = displayGet(display,'gamma table');
 angle = deg2rad(stimParams.direction);
-dir   = [cos(angle) sin(angle) 0]'; % should put 100 to stimParams
+dir   = [cos(angle) sin(angle) 0]';
+
+if isfield(stimParams, 'duration')
+    stimDuration = stimParams.duration;
+else
+    stimDuration = 0.5; % Default to .5 seconds
+end
 
 %% Make stimulus image with gap & reference color
 %  Compute size for one patch
@@ -60,7 +66,7 @@ end
 %% Make match stimulus
 %  Compute match color
 refContrast    = RGB2ConeContrast(display,refColor);
-matchContrast  = refContrast + stimParams.dContrast*dir;
+matchContrast  = refContrast + stimParams.dContrast*dir/100;% should put 100 to stimParams
 matchColor     = coneContrast2RGB(display,matchContrast);
 
 %  Set color to corresponding positions in stimIm
@@ -94,7 +100,7 @@ stimulus.images = []; % free space for images
 %% Make blank stimulus
 blankIm   = repmat(reshape(stimParams.bgColor,[1 1 3]),...
                    stimHeight,stimWidth);
-blankStim = createStimulusStruct(blankIm,cmap);
+blankStim = createStimulusStruct(blankIm,cmap,[],stimDuration);
 blankStim.textures=Screen('MakeTexture',display.windowPtr,blankIm,[],[],2);
 
 
