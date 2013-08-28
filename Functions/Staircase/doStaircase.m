@@ -351,14 +351,13 @@ if ~isfield(stairParams, 'curStairVars')
     stairParams.curStairVars = {};
 end
 
-% What is this one
-% clean it up and comment it soon
+% Initialize condition name
 if ~isfield(stairParams, 'conditionName')
     if length(stairParams.curStairVars) < 1
         stairParams.conditionName = stairParams.adjustableVarName;
     else
-        for ii = 1:length(stairParams.adjustableVarStart)
-            for jj = 1:length(stairParams.curStairVars)
+        for ii = 1 : size(stairParams.adjustableVarStart, 1)
+            for jj = 1 : size(stairParams.curStairVars, 1)
                 stairParams.conditionName{ii,jj*2-1} = ...
                     stairParams.curStairVars{jj,1};
                 stairParams.conditionName{ii,jj*2} = ...
