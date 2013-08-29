@@ -24,11 +24,11 @@ function [deltaEImage, whiteXYZ] = plotCIEThreshold(display, refColor, ...
 %
 %  See also:
 %    lms2xyz (IsetBio), xyz2lms (IsetBio), deltaEab (ISET)
-%    plotCbThreshold
+%    plotBrettelThreshold
 %
 %  (HJ) Aug, 2013
 
-%% Check inputs
+%% Check inputs & Init
 %  Check number of inputs
 if nargin < 1, error('Display structure required'); end
 if nargin < 2, error('Reference color RGB required'); end
@@ -46,14 +46,19 @@ if max(bgColor ) > 1, bgColor  = bgColor  / 255; end
 
 assert(all(refColor >= 0 & refColor <= 1 & bgColor >=0 & bgColor <= 1));
 
+% Init parameters to be used
+plotRegionL = 0.02; % plot region size for L
+plotRegionM = 0.02; % plot region size for M
+plotSteps  = 1000;  % number of steps to be sampled in L and M
+
 %% Compute deltaE values
 %  Compute reference color contrast
 [refContrast, bgLMS]  = RGB2ConeContrast(display, refColor, bgColor);
 refLMS = (refContrast + 1) .* bgLMS;
 
-%  Set plot region, should init the constants at front of the program
-regionL = refContrast(1) + linspace(-0.02, 0.02, 1000);
-regionM = refContrast(2) + linspace( 0.02, -0.02, 1000);
+%  Set plot region
+regionL = refContrast(1) + linspace(-plotRegionL, plotRegionL, plotSteps);
+regionM = refContrast(2) + linspace(plotRegionM, -plotRegionM, plotSteps);
 [L, M]  = meshgrid(regionL, regionM);
 
 % Create reference XYZ image
@@ -78,7 +83,7 @@ deltaEImage  = deltaEab(refXYZImage, stimXYZImage, whiteXYZ);
 figure;
 xlabel('L Contrast');
 ylabel('M Contrast');
-grid on;
+axis off;
 %  plot deltaE image
 imagesc(deltaEImage);
 end
