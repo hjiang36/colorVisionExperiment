@@ -80,8 +80,8 @@ achievableRGB = unique(achievableRGB, 'rows');
 achPoints = RGB2ConeContrast(display, achievableRGB, bgColor);
 
 %% Plot
-figure; axis off;
-xlabel('L Contrast'); ylabel('M Contrast');
+%figure; axis off;
+%xlabel('L Contrast'); ylabel('M Contrast');
 hold on;
 plot(achPoints(:,1),achPoints(:,2), '.', 'Color', [0.75 0.75 0.75]); 
 

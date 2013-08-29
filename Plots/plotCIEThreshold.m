@@ -11,6 +11,8 @@ function [deltaEImage, whiteXYZ] = plotCIEThreshold(display, refColor, ...
 %    bgColor     - background RGB color of display, default .5 gray
 %    whiteXYZ    - white point XYZ value, default 5 times of background
 %                  XYZ value
+%    varargin    - Name-value pair for parameters, not supported yet, will
+%                  support colorMap, base figure handle, etc.
 %
 %  Output:
 %    deltaEImage - a matrix that contains deltaE for each point of cone
@@ -63,7 +65,7 @@ regionM = refContrast(2) + linspace(plotRegionM, -plotRegionM, plotSteps);
 
 % Create reference XYZ image
 refXYZ  = lms2xyz(reshape(refLMS,[1 1 3]));
-refXYZImage = repmat(refXYZ, [size(L, 1) size(L, 2)])*3000;
+refXYZImage = repmat(refXYZ, [size(L, 1) size(L, 2)]);
 
 % Create cone contrast image
 contrastImage = cat(3, L, M);
@@ -73,7 +75,7 @@ contrastImage(:,:,3) = refContrast(3);
 bgLMSImage   = repmat(reshape(bgLMS,[1 1 3]),[size(contrastImage,1) ...
                             size(contrastImage,2)]);
 stimLMSImage = (contrastImage + 1) .* bgLMSImage;
-stimXYZImage = lms2xyz(stimLMSImage)*3000;
+stimXYZImage = lms2xyz(stimLMSImage);
 
 % Compute deltaE value
 deltaEImage  = deltaEab(refXYZImage, stimXYZImage, whiteXYZ);
