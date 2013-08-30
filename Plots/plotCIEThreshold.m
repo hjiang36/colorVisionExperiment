@@ -36,8 +36,10 @@ function [deltaEImage, whiteXYZ] = plotCIEThreshold(display, refColor, ...
 %  Check number of inputs
 if nargin < 1, error('Display structure required'); end
 if nargin < 2, error('Reference color RGB required'); end
-if nargin < 3, bgColor  = [0.5 0.5 0.5]'; end
-if nargin < 4, whiteXYZ = displayGet(display, 'white xyz')*2.5; end
+if nargin < 3 || isempty(bgColor), bgColor  = [0.5 0.5 0.5]'; end
+if nargin < 4 || isempty(whiteXYZ)
+    whiteXYZ = displayGet(display, 'white xyz')*2.5;
+end
 
 % Check length of varargin
 if mod(length(varargin),2) ~= 0
@@ -109,13 +111,16 @@ if isempty(hf)
     hf = figure('Name', 'CIELab Threshold', ...
                'NumberTitle', 'off');
     grid off; hold on; 
-    xlim([1 plotSteps]); ylim([1 plotSteps]);
-    xlabel('L Contrast'); ylabel('M Contrast');
+    xlim([min(regionL) max(regionL)]); ylim([min(regionM) max(regionM)]);
+    xlabel('L Contrast'); ylabel('M Contrast'); 
+    
 end
 set(0,'CurrentFigure', hf);
 
 %  plot deltaE image
 colormap(cmap);
-imagesc(deltaEImage);
+hI = imagesc(regionL, regionM, deltaEImage);
+set(gca, 'ydir', 'normal'); % Ensure that origin is at lower left corner
+uistack(hI, 'bottom');
 
 end

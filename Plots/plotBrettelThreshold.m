@@ -40,9 +40,11 @@ function [deltaEImage, whiteXYZ] = plotBrettelThreshold(display, ...
 %  Check number of inputs
 if nargin < 1, error('Display structure required'); end
 if nargin < 2, error('Reference color RGB required'); end
-if nargin < 3, bgColor  = [0.5 0.5 0.5]'; end
+if nargin < 3 || isempty(bgColor), bgColor  = [0.5 0.5 0.5]'; end
 if nargin < 4, cbType   = 2; end
-if nargin < 5, whiteXYZ = displayGet(display, 'white xyz')*2.5; end
+if nargin < 5 || isempty(whiteXYZ) 
+    whiteXYZ = displayGet(display, 'white xyz')*2.5; 
+end
 
 % Check length of varargin
 if mod(length(varargin),2) ~= 0
@@ -62,8 +64,8 @@ assert(all(refColor >= 0 & refColor <= 1 & bgColor >=0 & bgColor <= 1));
 
 %% Parse variable input and Init parameters
 % Init constant parameters
-plotRegionL = 0.02; % plot region size for L
-plotRegionM = 0.02; % plot region size for M
+plotRegionL = 0.05; % plot region size for L
+plotRegionM = 0.05; % plot region size for M
 plotSteps  = 1000;  % number of steps to be sampled in L and M
 
 % Parse variable input
@@ -116,14 +118,15 @@ if isempty(hf)
     hf = figure('Name', 'CIELab Threshold', ...
                'NumberTitle', 'off');
     grid off; hold on; 
-    xlim([1 plotSteps]); ylim([1 plotSteps]);
+    xlim([min(regionL) max(regionL)]); ylim([min(regionM) max(regionM)]);
     xlabel('L Contrast'); ylabel('M Contrast');
 end
 set(0,'CurrentFigure', hf);
 
 %  plot deltaE image
 colormap(cmap);
-imagesc(deltaEImage);
+hI = imagesc(regionL, regionM, deltaEImage);
+uistack(hI, 'bottom');
 
 
 end
