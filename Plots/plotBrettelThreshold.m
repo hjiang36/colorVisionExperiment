@@ -18,6 +18,9 @@ function [deltaEImage, whiteXYZ] = plotBrettelThreshold(display, ...
 %                  'Base Plot', the figure handle of plot to be drawn onto
 %                               by default, a new figure is created
 %                  'Colormap', colormap to be used in the plot
+%                  'Contour' , plot contours for certain deltaE ellipse,
+%                              the values for contour can be a vector of
+%                              deltaE values to be ploted
 %
 %  Output:
 %    deltaEImage - a matrix that contains deltaE for each point of cone
@@ -71,6 +74,7 @@ plotSteps  = 1000;  % number of steps to be sampled in L and M
 % Parse variable input
 hf = [];
 cmap = 'default';
+deltaEContourV = [];
 
 for i = 1 : 2 : length(varargin)
     switch lower(strrep(varargin{i}, ' ', ''))
@@ -78,6 +82,8 @@ for i = 1 : 2 : length(varargin)
             hf = varargin{i+1};
         case 'colormap'
             cmap = varargin{i+1};
+        case 'contour'
+            deltaEContourV = varargin{i+1};
         otherwise
             warning('Unknown parameter encountered');
     end
@@ -112,6 +118,9 @@ stimXYZImage = lms2xyz(xyz2lms(stimXYZImage, cbType, whiteXYZ));
 % Compute deltaE value
 deltaEImage  = deltaEab(refXYZImage, stimXYZImage, whiteXYZ);
 
+% Generate contour image
+contourImage = deltaEImage2Contour(deltaEImage, deltaEContourV);
+
 %% Plot
 %  create figure
 if isempty(hf)
@@ -125,7 +134,7 @@ set(0,'CurrentFigure', hf);
 
 %  plot deltaE image
 colormap(cmap);
-hI = imagesc(regionL, regionM, deltaEImage);
+hI = imagesc(regionL, regionM, contourImage);
 uistack(hI, 'bottom');
 
 
