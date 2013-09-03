@@ -21,6 +21,7 @@ function [deltaEImage, whiteXYZ] = plotBrettelThreshold(display, ...
 %                  'Contour' , plot contours for certain deltaE ellipse,
 %                              the values for contour can be a vector of
 %                              deltaE values to be ploted
+%                  'Alpha'    , scalar, indicating transparency of plot
 %
 %  Output:
 %    deltaEImage - a matrix that contains deltaE for each point of cone
@@ -72,9 +73,10 @@ plotRegionM = 0.05; % plot region size for M
 plotSteps  = 1000;  % number of steps to be sampled in L and M
 
 % Parse variable input
-hf = [];
-cmap = 'default';
-deltaEContourV = [];
+hf             = [];        % Create new plot
+cmap           = 'default'; % default color map
+deltaEContourV = [];        % Plot whole image
+transparency   = 0.8;       % Transparency of plot
 
 for i = 1 : 2 : length(varargin)
     switch lower(strrep(varargin{i}, ' ', ''))
@@ -84,6 +86,11 @@ for i = 1 : 2 : length(varargin)
             cmap = varargin{i+1};
         case 'contour'
             deltaEContourV = varargin{i+1};
+        case 'alpha'
+            if ~isscalar(varargin{i+1})
+                error('Alpha should be scalar'); 
+            end
+            transparency = varargin{i+1};
         otherwise
             warning('Unknown parameter encountered');
     end
@@ -129,6 +136,7 @@ if isempty(hf)
     grid off; hold on; 
     xlim([min(regionL) max(regionL)]); ylim([min(regionM) max(regionM)]);
     xlabel('L Contrast'); ylabel('M Contrast');
+    axis equal;
 end
 set(0,'CurrentFigure', hf);
 
@@ -136,6 +144,7 @@ set(0,'CurrentFigure', hf);
 colormap(cmap);
 hI = imagesc(regionL, regionM, contourImage);
 uistack(hI, 'bottom');
+alpha(hI, transparency);
 
 
 end

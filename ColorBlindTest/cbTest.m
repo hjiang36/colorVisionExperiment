@@ -1,32 +1,30 @@
-% cbStaircase
+%% s_cbStaircaseMain
+%    This is the main function for running psychophysical staircase to
+%    assess color vision similarities for color blind people
 %
-%   Purpose:
-%       main function for running psychophysical staircase to assess
-%       color similarities for color blind people
+%    Staircase is controlled by generic doStaircase function (RFD)
+%    Stimulus generation function is specified as 'trialGenFuncName'
+%    parameter
 %
-%   Uses generic doStaircase function (RFD) to operate the staircase. Uses
-%   functions beginning with 'cb' to generate stimuli.
+%  General Process:
+%     1. s_cbStaircase - set parameters for experiment
+%     2. doStaircase   - start staircase control process
+%     3. cbTrial       - prepare 
+%     4. doTrial       - show stimulus in each trial, get user response and
+%                        give sound feedback to user
 %
-%   History
-%      19/11/12: HJ: adapted from cocStairCase (RFD)
-%
-%   Flow:
-%     1. cocStaircase: set parameters for experiment
-%     2.   => doStaircase(display,stairParams,stimParams,trialGenFuncName [='cocTrial'], ...);
-%     3.       => cocTrial(display, stimParams, data); (prepare trial elements)
-%     4.       => doTrial(display,trial,runPriority,showTimingFlag,returnHistory)
-%     5.            => showStimulus(display, material.stimulus,runPriority, showTimingFlag);
-%     6.                 => [show each frame; no external calls]
-%     7.                 => drawFixation(display, colindex)     
-
-
-AssertOpenGL;
+%  History
+%    (HJ) Nov, 2012 - First version adopted from cocStairCase (RFD)
+%    (HJ) Sep, 2013 - Add routine for detection and two interval pedestal
+%                     experiment
 
 %% Initialize parameters for display, staircase, stimulus, and subject
+AssertOpenGL;
+
 display          = initDisplay;
 if isempty(display), return; end
 
-stimParams       = initStimParams('Gsig',10);
+stimParams       = initStimParams('Gsig',10);   % Gaussian blurred stimulus
 display          = initFixParams(display,0.25); % fixation fov to 0.25
 stairParams      = initStaircaseParams;
 dataDir          = initDataDir;
@@ -68,12 +66,6 @@ display = closeScreen(display);
 fclose(logFID(1));
 
 %% Visualize Data
-% if exist('ColorTable.txt','file')
-%     colorHistory = csvread('ColorTable.txt');
-%     cbPlot(newDataSum,stairParams,...
-%         fullfile(dataDir,[subjectParams.name '.log']),...
-%         colorHistory,stimParams.Type);
-% end
 
 
 

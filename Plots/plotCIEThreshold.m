@@ -14,10 +14,11 @@ function [deltaEImage, whiteXYZ] = plotCIEThreshold(display, refColor, ...
 %    varargin    - Name-value pair for parameters, now supports
 %                  'Base Plot', the figure handle of plot to be drawn onto
 %                               by default, a new figure is created
-%                  'Colormap', colormap to be used in the plot
-%                  'Contour' , plot contours for certain deltaE ellipse,
-%                              the values for contour can be a vector of
-%                              deltaE values to be ploted
+%                  'Colormap' , colormap to be used in the plot
+%                  'Contour'  , plot contours for certain deltaE ellipse,
+%                               the values for contour can be a vector of
+%                               deltaE values to be ploted
+%                  'Alpha'    , scalar, indicating transparency of plot
 %
 %  Output:
 %    deltaEImage - a matrix that contains deltaE for each point of cone
@@ -67,9 +68,10 @@ plotRegionM = 0.02; % plot region size for M
 plotSteps  = 1000;  % number of steps to be sampled in L and M
 
 % Parse variable input
-hf = [];
-cmap = 'default';
-deltaEContourV = [];
+hf             = [];        % Create new plot
+cmap           = 'default'; % default color map
+deltaEContourV = [];        % Plot whole image
+transparency   = 0.8;       % Transparency of plot
 
 for i = 1 : 2 : length(varargin)
     switch lower(strrep(varargin{i}, ' ', ''))
@@ -79,6 +81,11 @@ for i = 1 : 2 : length(varargin)
             cmap = varargin{i+1};
         case 'contour'
             deltaEContourV = varargin{i+1};
+        case 'alpha'
+            if ~isscalar(varargin{i+1})
+                error('Alpha should be scalar'); 
+            end
+            transparency = varargin{i+1};
         otherwise
             warning('Unknown parameter encountered');
     end
@@ -132,5 +139,6 @@ colormap(cmap);
 hI = imagesc(regionL, regionM, contourImage);
 set(gca, 'ydir', 'normal'); % Ensure that origin is at lower left corner
 uistack(hI, 'bottom');
+alpha(hI, transparency);
 
 end
