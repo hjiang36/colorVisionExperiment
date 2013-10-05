@@ -21,27 +21,28 @@ function display = initDisplay(dispName)
 
 %% Check inputs
 if nargin < 1, dispName = []; end
-if ~isempty(dispName) && ~exist(dispName,'file')
-    error('Display calibration file not found');
-end
 
 %% Load parameter from calibration structure
-if ~isempty(dispName)
-    c = load(dispName);
-    if isfield(c,'d')
-        display = c.d;
-    elseif isfield(c,'cals')
-        display   = loadDisplayParams(dispName);
-    end
+if isempty(dispName)
+    dispName = input('Display Calibration File Name:');
+end
+
+c = load(dispName);
+if isfield(c,'d')
+    display = c.d;
+elseif isfield(c,'cals')
+    display   = loadDisplayParams(dispName);
 else
-    [display, ok] = selectDisplay;
-    if ~ok, return; end
-    display = loadDisplayParams(display);
+    error('Unknown display structure');
 end
 
 % Convert PTB version to one
 
 %% Set experiment parameters
 display.screenNumber = max(Screen('Screens'));
-display.radius       = pix2angle(display,floor(min(display.numPixels)/2));
+if ~isfield(display, 'numPixels')
+    screenRes = Screen('Resolution', display.screenNumber);
+    display.numPixels = [screenRes.width screenRes.height];
+end
+display.radius = pix2angle(display,floor(min(display.numPixels)/2));
 display.backColorRgb = [0.5 0.5 0.5]'*255; % set it to gray

@@ -21,7 +21,7 @@
 %% Initialize parameters for display, staircase, stimulus, and subject
 AssertOpenGL;
 
-display          = initDisplay;
+display          = initDisplay('LCD-Apple');
 if isempty(display), return; end
 
 stimParams       = initStimParams('Gsig',10);   % Gaussian blurred stimulus

@@ -21,6 +21,9 @@ if nargin < 1, useDefault = true; end
 if useDefault % Use default directory, 'colorVisionExperimentPath/Exp Data'
     dataDir = mfilename('fullpath');
     oldPath = cd(fileparts(dataDir)); % Change to mfile location
+    if ~exist('../../Exp Data', 'dir')
+        mkdir('../../', 'Exp Data');
+    end
     cd('../../Exp Data'); % Change to data directory
     dataDir = pwd;
     cd(oldPath); % Restore settings

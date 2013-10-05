@@ -35,7 +35,10 @@ end
 %  Check fields in display structure
 if ~isfield(display,'screenNumber'), display.screenNumber = 0; end
 if ~isfield(display,'frameRate'), display.frameRate = 60; end
-if ~isfield(display,'resolution'), display.resolution = [1920 1080]; end
+if ~isfield(display,'resolution')
+    res = Screen('Resolution', display.screenNumber);
+    display.resolution = [res.width res.height]; 
+end
 
 % check gamma table
 if isempty(displayGet(display,'gamma table'))
@@ -47,7 +50,7 @@ if ~isfield(display,'backColorRgb')
 end
 
 %% Parse varargin
-bitDepth       = 10;   % color bit depth
+bitDepth       = 8;    % color bit depth
 hideCursorFlag = true; % whether to hide mouse in experiment
 numBuffers     = 2;    % number of buffers
 drawFix        = true; % whether to draw fixation point
