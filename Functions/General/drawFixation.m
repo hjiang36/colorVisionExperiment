@@ -46,7 +46,7 @@ switch(lower(d.fixType))
         %do nothing
  
     case {'dot' 'dot with grid' 'small dot'}
-        Screen('glPoint', d.windowPtr, d.fixColorRgb(colIndex,:), d.fixX, d.fixY, d.fixSizePixels);
+        Screen('glPoint', d.windowPtr, d.fixColorRgb(colIndex,:), d.fixPosX, d.fixPosY, d.fixSizePixels);
     
     case {'lateraldot'}
         % Hack: use colIndex to control both color and fixation location
@@ -54,15 +54,15 @@ switch(lower(d.fixType))
         loc = mod(colIndex, 3); if loc == 0, loc = 3; end
         %so for colIndex vals [1:6], col= [1 1 1 2 2 2], loc = [1 2 3 1 2 3];
         Screen('glPoint', d.windowPtr, d.fixColorRgb(col,:), ...
-            d.fixStim(loc), d.fixY, d.fixSizePixels);
+            d.fixStim(loc), d.fixPosY, d.fixSizePixels);
     
     case {'disk','left disk','right disk', 'upper left', 'lower left', 'upper right', 'lower right', 'left', 'right', 'upper', 'lower'}
-        Screen('gluDisk', d.windowPtr, d.fixColorRgb(colIndex,:), d.fixX, d.fixY, d.fixSizePixels);
+        Screen('gluDisk', d.windowPtr, d.fixColorRgb(colIndex,:), d.fixPosX, d.fixPosY, d.fixSizePixels);
     
     case {'double disk','left double disk','right double disk'}
         % draw mean luminance 'edge' big one first
-        Screen('gluDisk', d.windowPtr, [128 128 128], d.fixX, d.fixY, d.fixSizePixels.*2);
-        Screen('gluDisk', d.windowPtr, d.fixColorRgb(colIndex,:), d.fixX, d.fixY, d.fixSizePixels);
+        Screen('gluDisk', d.windowPtr, [128 128 128], d.fixPosX, d.fixPosY, d.fixSizePixels.*2);
+        Screen('gluDisk', d.windowPtr, d.fixColorRgb(colIndex,:), d.fixPosX, d.fixPosY, d.fixSizePixels);
             
     % no task (colIndex) for large crosses
     case {'large cross' , 'largecross','large cross x+','largecrossx+'},
@@ -85,13 +85,13 @@ switch(lower(d.fixType))
         Screen('DrawDots', d.windowPtr, d.fixCoords{colIndex2}, d.fixSizePixels(colIndex2), d.fixColorRgb(colIndex,:));
 
     case {'pointer lines'} % add the fields LpixWidth and CpixWidth to display - length of lines which cross at center and diameter of circle which occludes them to create empty gap (in pixels)
-        Screen('DrawLine', d.windowPtr, d.fixColorRgb(colIndex,:), d.fixX-d.LpixWidth/2, d.fixY+d.LpixWidth/2, d.fixX+d.LpixWidth/2, d.fixY-d.LpixWidth/2, 1);
-        Screen('DrawLine', d.windowPtr, d.fixColorRgb(colIndex,:), d.fixX-d.LpixWidth/2, d.fixY-d.LpixWidth/2, d.fixX+d.LpixWidth/2, d.fixY+d.LpixWidth/2, 1);
-        Screen('gluDisk', d.windowPtr, d.backColorRgb, d.fixX, d.fixY, d.CpixWidth/2);
+        Screen('DrawLine', d.windowPtr, d.fixColorRgb(colIndex,:), d.fixPosX-d.LpixWidth/2, d.fixPosY+d.LpixWidth/2, d.fixPosX+d.LpixWidth/2, d.fixPosY-d.LpixWidth/2, 1);
+        Screen('DrawLine', d.windowPtr, d.fixColorRgb(colIndex,:), d.fixPosX-d.LpixWidth/2, d.fixPosY-d.LpixWidth/2, d.fixPosX+d.LpixWidth/2, d.fixPosY+d.LpixWidth/2, 1);
+        Screen('gluDisk', d.windowPtr, d.backColorRgb, d.fixPosX, d.fixPosY, d.CpixWidth/2);
 
     case {'chung dots'} % add the fields gapSize and dotSize to display - indicates how far from fixation each dot will be drawn and diameter of dots (in pixels)
-        Screen('gluDisk', d.windowPtr, d.fixColorRgb(colIndex,:), d.fixX, d.fixY-(d.gapSize/2),d.dotSize);
-        Screen('gluDisk', d.windowPtr, d.fixColorRgb(colIndex,:), d.fixX, d.fixY+(d.gapSize/2),d.dotSize);
+        Screen('gluDisk', d.windowPtr, d.fixColorRgb(colIndex,:), d.fixPosX, d.fixPosY-(d.gapSize/2),d.dotSize);
+        Screen('gluDisk', d.windowPtr, d.fixColorRgb(colIndex,:), d.fixPosX, d.fixPosY+(d.gapSize/2),d.dotSize);
 
     otherwise,
         error('Unknown fixationType!');
