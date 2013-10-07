@@ -12,10 +12,15 @@ function stimulus = createTextures(display, stimulus, removeImages)
 % strongly recommended; however, for a small number of images, the field
 % may not slow things too much; setting the flag to 0 keeps the images.
 
+% MORE COMMENTS TO BE ADDED HERE
+
 %2005/06/09   SOD: ported from createImagePointers
 %2005/10/31   FWC: changed display.screenNumber into display.windowPtr
 
 if notDefined('removeImages'),      removeImages = 1;       end
+if ~isfield(display, 'USE_BITSPLUSPLUS')
+    display.USE_BITSPLUSPLUS = false;
+end
 
 for stimNum = 1:length(stimulus)
 
@@ -57,6 +62,11 @@ for stimNum = 1:length(stimulus)
         stimulus(stimNum).textures(imgNum) = ...
 			Screen('MakeTexture',display.windowPtr, ...
 			double(stimulus(stimNum).images(:,:,:,imgNum)));
+        % create bits++ color lookup table
+        if display.USE_BITSPLUSPLUS
+            
+            display.clut = [0:255; 0:255; 0:255]' * 256;
+        end
 	end;
 
 	% Clean up
