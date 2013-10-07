@@ -11,20 +11,11 @@ function stimulus = createTextures(display, stimulus, removeImages)
 % pass-by-copy calls of stimulus). For stimuli with many images, this is
 % strongly recommended; however, for a small number of images, the field
 % may not slow things too much; setting the flag to 0 keeps the images.
-%
-%If you're trying to create an texture starting at something
-%other than the first image, use addTextures.
 
 %2005/06/09   SOD: ported from createImagePointers
 %2005/10/31   FWC: changed display.screenNumber into display.windowPtr
-if notDefined('removeImages'),      removeImages = 1;       end
 
-%c = getReservedColor(display, 'background');
-% try
-% 	c = display.backColorIndex;
-% catch
-% 	c = display.backColorRgb;
-% end;
+if notDefined('removeImages'),      removeImages = 1;       end
 
 for stimNum = 1:length(stimulus)
 

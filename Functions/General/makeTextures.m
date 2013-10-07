@@ -25,6 +25,8 @@ function stim = makeTextures(display, stim)
 % 10/30/98   Bob: Fixed code that cleans up non-null image pointers for 
 % backwards compatability.
 % 2005.02.23 RFD: ported from createImagePointers
+% 2013.10.10 HJ : Added bits++ support
+
 for stimNum = 1:length(stim)
 	nImages = length(stim(stimNum).images);
         	

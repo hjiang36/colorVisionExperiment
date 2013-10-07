@@ -1,4 +1,5 @@
 function sequence = cbTrialImageSequence(~, stimulus)
+% COMMENTS TO BE ADDED HERE
 
 nImagesPerCycle  = round(1/ (stimulus.frequency * stimulus.stimframe));
 blankStimulus    = nImagesPerCycle + 1;
