@@ -31,7 +31,7 @@ stimParams.visualSize = [4 2]; %(deg)
 stimParams.gapSize = 1/4;
 
 % Spacial Blur
-stimParams.Gsig = 5;
+stimParams.Gsig = 0;
 
 % duration of stimulus presentation
 stimParams.duration = 0.5; % seconds

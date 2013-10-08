@@ -21,22 +21,22 @@ m           = round(angle2pix(display,stimsize)*2); %(width in pixels)
 N           = round(angle2pix(display,stimsize)*2*2); %(height in pixels)
 
 cbColor                  = [127 127 127];
-cbIm                     = ones([m/6 N/6 3]);
-n                        = size(cbIm,2);
-cbIm(:,:,1)              = cbColor(1);
-cbIm(:,:,2)              = cbColor(2);
-cbIm(:,:,3)              = cbColor(3);
+refIm                    = ones([m/6 N/6 3]);
+n                        = size(refIm,2);
+refIm(:,:,1)             = cbColor(1);
+refIm(:,:,2)             = cbColor(2);
+refIm(:,:,3)             = cbColor(3); % Should make this simple
 gapSize                  = stimParams.gapSize;
 gapL                     = floor((0.5-gapSize/2)*n);
 gapR                     = floor((0.5+gapSize/2)*n);
-cbIm(:, gapL +1:gapR,:)  = display.backColorRgb(1);
+refIm(:, gapL +1:gapR,:)  = display.backColorRgb(1);
 
 if stimParams.Gsig > 0
     gFilter = fspecial('Gaussian',[10 10],stimParams.Gsig);
-    cbIm    = imfilter(cbIm, gFilter, 'same', display.backColorRgb(1));
+    refIm    = imfilter(refIm, gFilter, 'same', display.backColorRgb(1));
 end
 
-cbImCell{1} = cbIm;
+cbImCell{1} = refIm;
 cbStim = createStimulusStruct(cbImCell,cmap,sequence,[],timing, fixSeq);
 cbStim = createTextures(display, cbStim);
 
@@ -47,12 +47,12 @@ matchParams.gapR    = gapR;
 matchParams.bgColor = display.backColorRgb(1);
 matchParams.type    = stimParams.Type;
 matchParams.color   = cbColor;
-matchIm             = cbSingleFrame(matchParams,cbIm);
+matchIm             = cbSingleFrame(matchParams,refIm);
 matchStim           = createStimulusStruct(matchIm,cmap,sequence,[],timing,fixSeq);
 matchStim           = createTextures(display, matchStim);
 
 %% make blank stim
-blankIm         = cbIm;
+blankIm         = refIm;
 blankIm(:,:,:)  = display.backColorRgb(1);
 col = fixSeq(1) +1;
 blankStim = createStimulusStruct(blankIm,cmap,1,[], [], col);

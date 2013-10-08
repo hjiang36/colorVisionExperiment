@@ -1,4 +1,4 @@
-function matchIm = cbSingleFrame(display, stimulus, cbIm)
+function matchIm = cbSingleFrame(display, stimulus, refIm)
 % COMMENTS NEED TO BE ADDED HERE
 % Also, we need to give this function a more understandable name
 
@@ -18,7 +18,7 @@ tt = cone2RGB(display,matchContrast);
 matchColor = 0.5+tt.scale*tt.dir;
 
 % Generate Im
-im              = cbIm;
+im              = refIm;
 gapL            = stimulus.gapL;
 gapR            = stimulus.gapR;
 

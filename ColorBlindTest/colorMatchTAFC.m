@@ -1,10 +1,13 @@
-%% s_cbStaircaseMain
+function colorMatchTAFC(subjectParams)
+%% function colorMatchTAFC()
 %    This is the main function for running psychophysical staircase to
 %    assess color vision similarities for color blind people
 %
 %    Staircase is controlled by generic doStaircase function (RFD)
 %    Stimulus generation function is specified as 'trialGenFuncName'
 %    parameter
+%
+%  MORE COMMENTS TO BE ADDED HERE
 %
 %  General Process:
 %     1. s_cbStaircase - set parameters for experiment
@@ -18,17 +21,21 @@
 %    (HJ) Sep, 2013 - Add routine for detection and two interval pedestal
 %                     experiment
 
+%% Check inputs
+if nargin < 1, subjectParams = []; end
+
 %% Initialize parameters for display, staircase, stimulus, and subject
 AssertOpenGL;
 
 display          = initDisplay('LCD-Apple');
+display.USE_BITSPLUSPLUS = true;
 if isempty(display), return; end
 
 stimParams       = initStimParams('Gsig',10);   % Gaussian blurred stimulus
 display          = initFixParams(display,0.25); % fixation fov to 0.25
 stairParams      = initStaircaseParams;
 dataDir          = initDataDir;
-subjectParams    = getSubjectParams(dataDir);
+subjectParams    = getSubjectParams(dataDir, subjectParams);
 
 priorityLevel    = 0;
 trialGenFuncName = 'cbTrialDetection'; 

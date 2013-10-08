@@ -46,34 +46,43 @@ for stimNum = 1:length(stimulus)
 	if isfield(stimulus(stimNum), 'textures'),
 		nonNull = find(stimulus(stimNum).textures);
 		for i=1:length(nonNull),
-			% run this from eval to suppress any errors that might ensue if
-			% the texture isn't valid converted eval to try, as two
-			% argument use of eval is now deprecated (jw)
             try
                 Screen(stimulus(stimNum).textures(nonNull(i)), 'Close');
             catch
             end
-		end;
-	end;
-	stimulus(stimNum).textures = zeros(nImages, 1);
+        end;
+    end;
+    stimulus(stimNum).textures = zeros(nImages, 1);
     
-	% Make textures
-	for imgNum = 1 : nImages
+    % Make textures
+    for imgNum = 1 : nImages
+        curImg = double(stimulus(stimNum).images(:,:,:,imgNum));
+        if max(curImg(:) > 1)
+            curImg = curImg / 255;
+            assert(all(curImg(:) <= 1), 'Unkown image range');
+        end
         stimulus(stimNum).textures(imgNum) = ...
-			Screen('MakeTexture',display.windowPtr, ...
-			double(stimulus(stimNum).images(:,:,:,imgNum)));
+            Screen('MakeTexture',display.windowPtr, ...
+            curImg, [], [], 2);
         % create bits++ color lookup table
         if display.USE_BITSPLUSPLUS
-            
-            display.clut = [0:255; 0:255; 0:255]' * 256;
+            for i = 1 : 3
+                imgPlane = curImg(:,:,i);
+                clut = (0 : 255) * 256;
+                [uniColor , iA, ~] = unique(imgPlane(:));
+                assert(length(uniColor < 256), 'Too many colors in image');
+                uniColor = round(uniColor*255);
+                clut(uniColor) = round(imgPlane(iA)*65535);
+                stimulus(stimNum).clut(:,i) = clut;
+            end
         end
-	end;
-
-	% Clean up
-	if removeImages==1
-		stimulus(stimNum).images = [];
-	end
-end;
+    end
+    
+    % Clean up
+    if removeImages==1
+        stimulus(stimNum).images = [];
+    end
+end
 
 % call/load 'DrawTexture' prior to actual use (clears overhead)
 Screen('DrawTexture', display.windowPtr, stimulus(1).textures(1), ...

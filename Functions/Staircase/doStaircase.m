@@ -230,7 +230,8 @@ function dataSum = doStaircase(display, stairParams, stimParams, ...
 %                   hissy fit with this and doesn't register them well
 % ( JW ) Jul, 2010  Added optional input arg 'plotEachTrialFlag' to plot 
 %                   results after every trial, if requested.
-% ( HJ ) Aug, 2013  structurize the code and add .mat output
+% ( HJ ) Aug, 2013  Add bits++ support, structurize the code and add .mat
+%                   output
 
 %% Check inputs & Init
 if nargin < 1, error('Display structure required'); end
