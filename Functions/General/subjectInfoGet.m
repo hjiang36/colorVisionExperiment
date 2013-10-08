@@ -1,4 +1,4 @@
-function subjectParams = getSubjectParams(dataDir, subjectParams)
+function subjectParams = subjectInfoGet(dataDir, subjectParams)
 %% function subjectParams = getSubjectParams([dataDir],[subjectParams])
 %    get subject name & comments
 %

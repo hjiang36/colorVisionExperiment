@@ -1,4 +1,4 @@
-function colorMatchTAFC(subjectParams)
+function colorMatchTAFC(subjectParams, display)
 %% function colorMatchTAFC()
 %    This is the main function for running psychophysical staircase to
 %    assess color vision similarities for color blind people
@@ -22,35 +22,21 @@ function colorMatchTAFC(subjectParams)
 %                     experiment
 
 %% Check inputs
-if nargin < 1, subjectParams = []; end
-
+if nargin < 1, error('Subject info structure needed'); end
+if nargin < 2
+    warning('Display not set, use Apple LCD data');
+    display = initDisplay('LCD-Apple');
+    display.USE_BITSPLUSPLUS = true;
+end
 %% Initialize parameters for display, staircase, stimulus, and subject
 AssertOpenGL;
 
-display          = initDisplay('LCD-Apple');
-display.USE_BITSPLUSPLUS = true;
-if isempty(display), return; end
-
-stimParams       = initStimParams('Gsig',10);   % Gaussian blurred stimulus
+stimParams       = initStimParams('cbType',subjectParams.cbType);
 display          = initFixParams(display,0.25); % fixation fov to 0.25
 stairParams      = initStaircaseParams;
-dataDir          = initDataDir;
-subjectParams    = getSubjectParams(dataDir, subjectParams);
 
 priorityLevel    = 0;
 trialGenFuncName = 'cbTrialDetection'; 
-
-%% Subject data and log file
-if exist(fullfile(dataDir,[subjectParams.name '.log']),'file')
-    delete(fullfile(dataDir,[subjectParams.name '.log']));
-end
-logFID(1) = fopen(fullfile(dataDir,[subjectParams.name '.log']), 'a+');
-%fprintf(logFID(1), '%s\n', datestr(now));
-%fprintf(logFID(1), '%s\n', subjectParams.comment);
-
-fprintf(logFID(1), '\n');
-logFID(2) = 1;
-hideCursor = false;
 
 %% Custumize the instruction Page
 instructions{1} = 'Color Test\n';
@@ -66,15 +52,15 @@ display    = openScreen(display,'hideCursor',false);
 
 %  do staircase
 newDataSum = doStaircase(display, stairParams, stimParams, ...
-    trialGenFuncName, priorityLevel, logFID);
+    trialGenFuncName, priorityLevel);
 
 %  close screen
-display = closeScreen(display);
+closeScreen(display);
 fclose(logFID(1));
 
 %% Visualize Data
 
 
-
+%% Send Email
 
 
