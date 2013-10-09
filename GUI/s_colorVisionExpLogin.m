@@ -19,3 +19,5 @@ expList = colorVisionExpListGet();
 
 
 %% Choose and start experiment
+userChoice = 1;
+eval(expList{userChoice}.expFunc);

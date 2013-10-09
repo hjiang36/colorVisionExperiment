@@ -1,4 +1,4 @@
-function ang = doCbDirTrial(display, winPtr, cbParams)
+function ang = cbDirectionOnCircleTrial(display, winPtr, cbParams)
 %% function doCbDirTrial
 %
 %    function that finds colorblind direction for one trial

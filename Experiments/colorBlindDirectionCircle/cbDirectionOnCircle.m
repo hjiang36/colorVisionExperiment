@@ -1,4 +1,4 @@
-function [angle, cbParams] = cbTestDirection(cbParams, varargin)
+function [angle, cbParams] = cbDirectionOnCircle(cbParams, varargin)
 %% function [angle, cbParams] = cbTestCbDirection([cbParams],[varargin])
 %
 %  experiment script that can be used to test colorblind direction
@@ -81,7 +81,8 @@ display   = openScreen(display,'hideCursor',false, 'bitDepth',bitDepth);
 for curTrial = 1 : cbParams.nTrials
      cbParams.curTrial = curTrial;
      % Do trial
-     angle(curTrial) = doCbDirTrial(display, display.windowPtr, cbParams);
+     angle(curTrial) = cbDirectionOnCircleTrial(display, ...
+                                        display.windowPtr, cbParams);
 end
 
 %% Close PsychToolbox Window

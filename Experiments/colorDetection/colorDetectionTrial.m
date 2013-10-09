@@ -1,4 +1,4 @@
-function [trial, status] = cbTrialDetection(display, stimParams, varargin)
+function [trial, stat] = colorDetectionTrial(display, stimParams, varargin)
 %% function [trial, status] = cbTrial(display, stimParams)
 %    function to generate a stimulus for color detection experiment
 % 
@@ -12,7 +12,7 @@ function [trial, status] = cbTrialDetection(display, stimParams, varargin)
 %    status     - completion status
 %  
 %  See also:
-%    initDisplay, initStimParams, doTrial, cbSingleFrame
+%    initDisplay, initStimParams, doTrial
 %
 %  History:
 %    (HJ) Dec, 2012 : Adopted from cocTrial
@@ -27,10 +27,8 @@ cmap  = displayGet(display,'gamma table');
 angle = deg2rad(stimParams.direction);
 dir   = [cos(angle) sin(angle) 0]';
 
-if isfield(stimParams, 'duration')
-    stimDuration = stimParams.duration;
-else
-    stimDuration = 0.5; % Default to .5 seconds
+if ~isfield(stimParams, 'duration')
+    stimParams.duration = 0.5; % Default to .5 seconds
 end
 
 %% Make stimulus image with gap & reference color
@@ -65,8 +63,8 @@ end
 
 %% Make match stimulus
 %  Compute match color
-refContrast    = RGB2ConeContrast(display,refColor);
-matchContrast  = refContrast + stimParams.dContrast*dir/100;% should put 100 to stimParams
+refContrast    = RGB2ConeContrast(display, refColor);
+matchContrast  = refContrast + stimParams.dContrast * dir;
 matchColor     = coneContrast2RGB(display,matchContrast);
 
 %  Set color to corresponding positions in stimIm
@@ -113,5 +111,5 @@ trial = addTrialEvent(display,trial,'stimulusEvent', 'stimulus', stimulus);
 trial = addTrialEvent(display,trial,'ISIEvent', 'stimulus', blankStim,...
                                     'duration', 0.5);
 
-status = 'done';
+stat = 'done';
 end

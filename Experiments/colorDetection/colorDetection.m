@@ -1,5 +1,5 @@
-function colorMatchTAFC(subjectParams, display)
-%% function colorMatchTAFC()
+function expResult = colorDetection(subjectParams, display, varargin)
+%% function colorDetection(subjectParams, display, [varargin])
 %    This is the main function for running psychophysical staircase to
 %    assess color vision similarities for color blind people
 %
@@ -7,27 +7,37 @@ function colorMatchTAFC(subjectParams, display)
 %    Stimulus generation function is specified as 'trialGenFuncName'
 %    parameter
 %
-%  MORE COMMENTS TO BE ADDED HERE
+%    Each trial in this experiment has two intervals. In each interval, two
+%    flat color patches are shown to the subject, either same or different.
+%    The subject is asked to choose in which interval the two patches are
+%    different
 %
-%  General Process:
-%     1. s_cbStaircase - set parameters for experiment
-%     2. doStaircase   - start staircase control process
-%     3. cbTrial       - prepare 
-%     4. doTrial       - show stimulus in each trial, get user response and
-%                        give sound feedback to user
+%  Inputs:
+%    subjectParams  - structure contains subject information, including
+%                     subject name, colorblind type and etc.
+%    display        - display name string or display structure
+%    varargin       - unused here, left for future usage
+%
+%  Output:
+%    expResult      - structure that contains experiment result
 %
 %  History
-%    (HJ) Nov, 2012 - First version adopted from cocStairCase (RFD)
-%    (HJ) Sep, 2013 - Add routine for detection and two interval pedestal
-%                     experiment
+%    (HJ) Oct, 2013 - Adopted from colorMatchTAFC.m
+%
 
 %% Check inputs
 if nargin < 1, error('Subject info structure needed'); end
 if nargin < 2
     warning('Display not set, use Apple LCD data');
     display = initDisplay('LCD-Apple');
-    display.USE_BITSPLUSPLUS = true;
 end
+
+if ischar(display)
+    display = displayCreate(display);
+end
+
+display.USE_BITSPLUSPLUS = true;
+
 %% Initialize parameters for display, staircase, stimulus, and subject
 AssertOpenGL;
 
@@ -36,7 +46,7 @@ display          = initFixParams(display,0.25); % fixation fov to 0.25
 stairParams      = initStaircaseParams;
 
 priorityLevel    = 0;
-trialGenFuncName = 'cbTrialDetection'; 
+trialGenFuncName = 'colorDetectionTrial'; 
 
 %% Custumize the instruction Page
 instructions{1} = 'Color Test\n';
@@ -51,7 +61,7 @@ stairParams.customInstructions = ['pressKey2Begin(display,0,false,''' cell2mat(i
 display    = openScreen(display,'hideCursor',false);
 
 %  do staircase
-newDataSum = doStaircase(display, stairParams, stimParams, ...
+expResult = doStaircase(display, stairParams, stimParams, ...
     trialGenFuncName, priorityLevel);
 
 %  close screen
