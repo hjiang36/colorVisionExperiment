@@ -20,5 +20,10 @@ expList = colorVisionExpListGet(subjectInfo);
 
 
 %% Choose and start experiment
-userChoice = 3;
+fprintf('Available experiment are listed below\n');
+for i = 1 : length(expList)
+    fprintf('\t %d - %s\n', i, expList{i}.expName);
+end
+
+userChoice = input('Which experiment do you want to run?');
 eval(expList{userChoice}.expFunc);

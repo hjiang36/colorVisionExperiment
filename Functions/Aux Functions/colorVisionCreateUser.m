@@ -16,11 +16,19 @@ function userInfo = colorVisionCreateUser(userName, cbType)
 if nargin < 1, error('user name is required'); end
 if notDefined('cbType'), cbType = 0; end
 
-dataDir = initDataDir;
-userName = fullfile(dataDir, 'UserData', ieParamFormat(userName));
+userInfo.name = userName;
 
-userInfo.name   = userName;
-userInfo.cbType = cbType; 
-save(userName, 'userInfo');
+dataDir = initDataDir;
+userDataFileDir = fullfile(dataDir, 'UserData', ieParamFormat(userName));
+userDataDir = fullfile(dataDir, 'ExpResults', ieParamFormat(userName));
+
+if ~exist(userDataDir, 'dir')
+    mkdir(userDataDir);
+    addpath(userDataDir);
+end
+
+userInfo.dataDir = userDataDir;
+userInfo.cbType  = cbType; 
+save(userDataFileDir, 'userInfo');
 
 end

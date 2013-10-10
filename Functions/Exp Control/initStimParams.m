@@ -25,7 +25,7 @@ end
 stimParams.cbType = 0;
 
 % size of stimulus
-stimParams.visualSize = [4 2]; %(deg)
+stimParams.visualSize = [3 4]; %(deg)
 
 % gapSize
 stimParams.gapSize = 1/4;

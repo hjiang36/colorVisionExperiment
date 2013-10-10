@@ -88,7 +88,10 @@ Screen('Preference','SkipSyncTests',1);
 % Save current gamma table
 display.oldGamma=Screen('ReadNormalizedGammaTable', display.screenNumber);
 try
-    Screen('LoadNormalizedGammaTable', display.screenNumber,display.gamma);
+    %Screen('LoadNormalizedGammaTable', display.screenNumber,display.gamma);
+    % Load linearlized gamma table
+    Screen('LoadNormalizedGammaTable',display.screenNumber, ...
+            repmat(linspace(0,1,256)', [1 3]));
 catch ME
     warning(ME.identifier, ME.message)
     % 10 bit gamma table not supported, reduce it to 8 bit
