@@ -39,6 +39,9 @@ stimParams.duration = 0.5; % seconds
 % init reference color
 stimParams.refColor = [0.5 0.5 0.5]';
 
+% init isi
+stimParams.isi = 0.1;
+
 %% Parse varargin and set to stimParams
 for i = 1 : 2 : length(varargin)
     stimParams.(varargin{i}) = varargin{i+1};

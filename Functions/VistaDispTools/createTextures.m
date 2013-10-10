@@ -70,7 +70,7 @@ for stimNum = 1:length(stimulus)
                 imgPlane = curImg(:,:,i);
                 clut = (0 : 255) * 256;
                 [uniColor , iA, ~] = unique(imgPlane(:));
-                assert(length(uniColor < 256), 'Too many colors in image');
+                assert(length(uniColor) < 256, 'Too many colors in image');
                 uniColor = round(uniColor*255);
                 clut(uniColor) = round(imgPlane(iA)*65535);
                 stimulus(stimNum).clut(:,i) = clut;

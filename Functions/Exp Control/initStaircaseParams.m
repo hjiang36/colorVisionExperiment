@@ -35,11 +35,11 @@ stairParams.curStairVars            = {'direction',...
 
 % Variable adjusted by staircase
 stairParams.adjustableVarName       = 'dContrast';
-stairParams.adjustableVarValues     = 0.05:0.05:2;
+stairParams.adjustableVarValues     = (0.1 : 0.1 : 3) / 100;
 
 % Set starting value, use 13 here
 stairParams.adjustableVarStart      = ...
-            repmat(13, size(stairParams.curStairVars{2}));
+            repmat(15, size(stairParams.curStairVars{2}));
 
 
 % Randomly vary the value
@@ -50,14 +50,14 @@ stairParams.numCorrectForStep       = 3;
 stairParams.numIncorrectForStep     = 1;
 
 % limit experiment in case of lack of convergence
-stairParams.maxNumTrials            = 200;
+stairParams.maxNumTrials            = 120;
 
 % end expt after this many reversals
-stairParams.maxNumReversals         = 15;
+stairParams.maxNumReversals         = 12;
 
 % increment size for each successive reversal 
-stairParams.correctStepSize         = [-4 -3 -3 -2 -1];
-stairParams.incorrectStepSize       = [4 3 3 2 1];
+stairParams.correctStepSize         = [-6 -4 -3 -3 -2 -1];
+stairParams.incorrectStepSize       = [6 4 3 3 2 1];
 
 % auditory feedback
 stairParams.feedback                = 'auditory'; %{'none')

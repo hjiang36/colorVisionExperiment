@@ -36,7 +36,7 @@ if ischar(display)
     display = displayCreate(display);
 end
 
-display.USE_BITSPLUSPLUS = true;
+%display.USE_BITSPLUSPLUS = true;
 
 %% Initialize parameters for display, staircase, stimulus, and subject
 AssertOpenGL;
@@ -66,7 +66,6 @@ expResult = doStaircase(display, stairParams, stimParams, ...
 
 %  close screen
 closeScreen(display);
-fclose(logFID(1));
 
 %% Visualize Data
 

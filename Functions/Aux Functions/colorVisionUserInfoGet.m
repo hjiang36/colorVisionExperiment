@@ -26,6 +26,7 @@ userName = ieParamFormat(userName);
 %% Get user information structure
 try
     result = load(userName);
+    result = result.userInfo;
 catch
     result = [];
 end

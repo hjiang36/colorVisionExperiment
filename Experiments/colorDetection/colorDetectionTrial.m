@@ -98,7 +98,7 @@ stimulus.images = []; % free space for images
 %% Make blank stimulus
 blankIm   = repmat(reshape(stimParams.bgColor,[1 1 3]),...
                    stimHeight,stimWidth);
-blankStim = createStimulusStruct(blankIm,cmap,[],stimDuration);
+blankStim = createStimulusStruct(blankIm,cmap);
 blankStim.textures=Screen('MakeTexture',display.windowPtr,blankIm,[],[],2);
 
 

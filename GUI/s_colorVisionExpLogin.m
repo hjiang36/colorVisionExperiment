@@ -10,14 +10,15 @@ dlg_title = 'Welcome - Login';
 def = {'Name'};
 answer = inputdlg(prompt, dlg_title, 1, def);
 
-if isempty(colorVisionUserInfoGet(answer))
+subjectInfo = colorVisionUserInfoGet(answer{1});
+if isempty(subjectInfo)
     error('Invalid user name'); 
 end
 
 %% Get uncompleted experiment list for the user
-expList = colorVisionExpListGet();
+expList = colorVisionExpListGet(subjectInfo);
 
 
 %% Choose and start experiment
-userChoice = 1;
+userChoice = 3;
 eval(expList{userChoice}.expFunc);

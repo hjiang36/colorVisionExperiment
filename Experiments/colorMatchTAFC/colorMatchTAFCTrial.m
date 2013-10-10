@@ -41,13 +41,13 @@ end
 
 %% Make reference and match patch image
 stimParams = colorMatchTAFCGenImage(display, stimParams, 'ref');
-stimParams = colorMatchTAFCGenMatchImg(display, stimParams, 'match');
+stimParams = colorMatchTAFCGenImage(display, stimParams, 'match');
 
 refImg   = stimParams.refImg;
 matchImg = stimParams.matchImg;
 
 %  Blur if needed
-if params.Gsig > 0
+if stimParams.Gsig > 0
     gFilter  = fspecial('Gaussian',[10 10],params.Gsig);
     refImg   = imfilter(refImg, gFilter, 'same', stimParams.bgColor(1));
     matchImg = imfilter(matchImg, gFilter, 'same', stimParams.bgColor(1));
