@@ -29,7 +29,7 @@ end
 
 c = load(dispName);
 if isfield(c,'d')
-    display = c.d;
+    display = displayCreate(dispName);
 elseif isfield(c,'cals')
     display   = loadDisplayParams(dispName);
 else

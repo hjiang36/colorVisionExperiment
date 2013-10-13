@@ -28,12 +28,13 @@ function expResult = colorDetection(subjectParams, display, varargin)
 %% Check inputs
 if nargin < 1, error('Subject info structure needed'); end
 if nargin < 2
-    warning('Display not set, use Apple LCD data');
-    display = initDisplay('LCD-Apple');
+    warning('Display not set, use NEC CRT data');
+    display = initDisplay('CRT-NEC');
+    display.frameRate = 85;
 end
 
 if ischar(display)
-    display = displayCreate(display);
+    display = initDisplay(display);
 end
 
 %display.USE_BITSPLUSPLUS = true;
@@ -67,9 +68,51 @@ expResult = doStaircase(display, stairParams, stimParams, ...
 %  close screen
 closeScreen(display);
 
-%% Visualize Data
+%% Save experiment results
+%  Save at this point to avoid any data loss later
+dataFileName = fullfile(subjectParams.dataDir, 'colorDetection.mat');
+save(dataFileName, 'expResult');
 
+%% Weibull fit and Visualization
+%  fitting
+threshColor = zeros(2, length(expResult));
+refLMS = RGB2ConeContrast(display, stimParams.refColor);
+for curStair = 1 : length(expResult)
+    sData = expResult(curStair);
+    dir = deg2rad(stairParams.curStairVars{curStair});
+    indx = sData.numTrials > 0;
+    [alpha,beta,~] = FitWeibAlphTAFC(sData.stimLevels(indx), ...
+        sData.numCorrect(indx), sData.numTrials - sData.numCorrect,[],2.2);
+    thresh = FindThreshWeibTAFC(0.75,alpha,beta);
+    threshColor(:,curStair) = refLMS(1:2) + thresh * [cos(dir) sin(dir)];
+    expResult(curStair).threshold = thresh;
+end
+
+%  save again
+save(dataFileName, 'expResult');
+
+%  plot threshold data and fitted ellipse
+hf = figure('NumberTitle', 'off', ...
+       'Name', 'Color Contour', ...
+       'Visible', 'off'); hold on;
+grid on; xlabel('L'); ylabel('M');
+plot(threshColor(1,:), threshColor(2,:), 'ro');
+
+if subjectParams.cbType == 0
+    [zg, ag, bg, alphag] = fitellipse(results.threshColor);
+    plotellipse(zg, ag, bg, alphag, 'b--')
+end
+
+axis equal;
+
+figureFileName = fullfile(subjectParams.dataDir, 'colorDetectContour.png');
+saveas(hf, figureFileName);
+close(hf);
 
 %% Send Email
-
-
+c = clock;
+emailContent = sprintf(['%s finished experiment color detection ' ...
+    'by %d-%d-%d %d:%d:%d'],subjectParams.name, ...
+    c(1),c(2),c(3),c(4),c(5),round(c(6)));
+sendMailAsHJ({'hjiang36@gmail.com'},'Color Detection Experiment Done', ...
+    emailContent, {dataFileName});

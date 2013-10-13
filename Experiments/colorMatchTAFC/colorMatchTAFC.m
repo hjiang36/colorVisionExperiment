@@ -33,10 +33,11 @@ if nargin < 1, error('Subject info structure needed'); end
 if nargin < 2
     warning('Display not set, use NEC CRT data');
     display = initDisplay('CRT-NEC');
+    display.frameRate = 85; % Hz
 end
 
 if ischar(display)
-    display = displayCreate(display);
+    display = initDisplay(display);
 end
 
 display.USE_BITSPLUSPLUS = true;
@@ -87,7 +88,7 @@ threshColor = zeros(2, length(expResult));
 refLMS = RGB2ConeContrast(display, stimParams.refColor);
 for curStair = 1 : length(expResult)
     sData = expResult(curStair);
-    dir = deg2rad(stairParams.curStairVars(curStair));
+    dir = deg2rad(stairParams.curStairVars{curStair});
     indx = sData.numTrials > 0;
     [alpha,beta,~] = FitWeibAlphTAFC(sData.stimLevels(indx), ...
         sData.numCorrect(indx), sData.numTrials - sData.numCorrect,[],2.2);

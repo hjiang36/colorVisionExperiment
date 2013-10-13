@@ -83,7 +83,20 @@ end
 
 %% Init screen parameters
 % Skip flickering warning
-Screen('Preference','SkipSyncTests',1);
+Screen('Preference','SkipSyncTests',0);
+
+% Set the resolution
+try
+    % Try to set spatial resolution, then spatial and temporal
+    Screen('Resolution', display.screenNumber, ...
+        display.resolution(1), display.resolution(2));
+    Screen('Resolution', display.screenNumber, ...
+        display.resolution(1), display.resolution(2), display.frameRate);
+catch ME
+    warning(ME.identifier, ME.message)
+end
+
+WaitSecs(2);
 
 % Save current gamma table
 display.oldGamma=Screen('ReadNormalizedGammaTable', display.screenNumber);
@@ -99,31 +112,22 @@ catch ME
     Screen('LoadNormalizedGammaTable', display.screenNumber,pGamma);
 end;
 
-% Set the resolution
-try
-    % Try to set spatial resolution, then spatial and temporal
-    Screen('Resolution', display.screenNumber, ...
-        display.resolution(1), display.resolution(2));
-    Screen('Resolution', display.screenNumber, ...
-        display.resolution(1), display.resolution(2), display.frameRate);
-catch ME
-    warning(ME.identifier, ME.message)
-end
+WaitSecs(2);
 
 % Check again if resolution got set
-newSettings = Screen('Resolution', display.screenNumber);
-if (newSettings.width~=display.resolution(1) || ...
-        newSettings.height~=display.resolution(2))
-    
-    % Save resolution
-    display.resolution    = [newSettings.width newSettings.height];
-    
-    % Save framerate is applicable
-    if newSettings.hz > 0
-        display.frameRate     = newSettings.hz;
-    end
-    warning('Failed to set indicated resolution and refresh rate.');
-end
+% newSettings = Screen('Resolution', display.screenNumber);
+% if (newSettings.width~=display.resolution(1) || ...
+%         newSettings.height~=display.resolution(2))
+%     
+%     % Save resolution
+%     display.resolution    = [newSettings.width newSettings.height];
+%     
+%     % Save framerate is applicable
+%     if newSettings.hz > 0
+%         display.frameRate     = newSettings.hz;
+%     end
+%     warning('Failed to set indicated resolution and refresh rate.');
+% end
 
 %% Open PTB Screen
 if bitDepth == 8 % Open screen for 8 bit

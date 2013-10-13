@@ -37,9 +37,9 @@ stairParams.curStairVars            = {'direction',...
 stairParams.adjustableVarName       = 'dContrast';
 stairParams.adjustableVarValues     = (0.1 : 0.1 : 3) / 100;
 
-% Set starting value, use 13 here
+% Set starting value, use 10 here
 stairParams.adjustableVarStart      = ...
-            repmat(15, size(stairParams.curStairVars{2}));
+            repmat(10, size(stairParams.curStairVars{2}));
 
 
 % Randomly vary the value
