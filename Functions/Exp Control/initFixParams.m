@@ -34,9 +34,11 @@ dim.x                  = display.numPixels(1);
 dim.y                  = display.numPixels(2);
 ecc                    = angle2pix(display, fov);
 
-display.fixStim        = round([0 -1 1] * ecc + dim.x/2); % what is this used for, should be documented later
+display.fixStim        = round([0 -1 1] * ecc + dim.x/2); 
 display.fixPosY        = round(dim.y/2);
-display.fixPosX        = round(dim.x/2);
+
+% fixPosX is divided by two is just for bits++ color++ mode
+display.fixPosX        = round(dim.x/2)/2;
 
 %% Set Parameter by varargin
 for i = 1 : 2 : length(varargin)

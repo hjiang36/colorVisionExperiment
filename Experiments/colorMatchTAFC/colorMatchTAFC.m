@@ -40,7 +40,7 @@ if ischar(display)
     display = initDisplay(display);
 end
 
-display.USE_BITSPLUSPLUS = true;
+display.USE_BITSPLUSPLUS = false; % Is the box in bits++ mode
 
 %% Initialize parameters for display, staircase, stimulus, and subject
 AssertOpenGL;
@@ -51,7 +51,12 @@ else
     stimParams = initStimParams('cbType', subjectParams.cbType);
 end
 
+stimParams.refColor = [0.7613 0.4528 0.4987]'; % L cone contrast: [0.1 0 0]
+%stimParams.refColor = [0.2777 0.6124 0.4934]'; % M cone contrast: [0 0.1 0]
+%stimParams.refColor = [0.5390 0.5651 0.4921]'; % L+M cone contrast [.1 .1 0]
+
 display       = initFixParams(display,0.25); % fixation fov to 0.25
+%display.fixType = 'none';
 stairParams   = initStaircaseParams;
 
 priorityLevel    = 0;
@@ -88,12 +93,12 @@ threshColor = zeros(2, length(expResult));
 refLMS = RGB2ConeContrast(display, stimParams.refColor);
 for curStair = 1 : length(expResult)
     sData = expResult(curStair);
-    dir = deg2rad(stairParams.curStairVars{curStair});
+    dir = deg2rad(stairParams.curStairVars{2}(curStair));
     indx = sData.numTrials > 0;
     [alpha,beta,~] = FitWeibAlphTAFC(sData.stimLevels(indx), ...
-        sData.numCorrect(indx), sData.numTrials - sData.numCorrect,[],2.2);
+        sData.numCorrect(indx), sData.numTrials(indx) - sData.numCorrect(indx),[],2.2);
     thresh = FindThreshWeibTAFC(0.75,alpha,beta);
-    threshColor(:,curStair) = refLMS(1:2) + thresh * [cos(dir) sin(dir)];
+    threshColor(:,curStair) = refLMS(1:2) + thresh * [cos(dir) sin(dir)]';
     expResult(curStair).threshold = thresh;
 end
 
@@ -108,7 +113,7 @@ grid on; xlabel('L'); ylabel('M');
 plot(threshColor(1,:), threshColor(2,:), 'ro');
 
 if subjectParams.cbType == 0
-    [zg, ag, bg, alphag] = fitellipse(results.threshColor);
+    [zg, ag, bg, alphag] = fitellipse(threshColor);
     plotellipse(zg, ag, bg, alphag, 'b--')
 end
 

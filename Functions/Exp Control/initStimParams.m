@@ -25,10 +25,11 @@ end
 stimParams.cbType = 0;
 
 % size of stimulus
-stimParams.visualSize = [3 4]; %(deg)
+% in color++ mode, the width will get doubled by bits++ box
+stimParams.visualSize = [5 0.5]; %(deg)
 
 % gapSize
-stimParams.gapSize = 1/4;
+stimParams.gapSize = 1/6;
 
 % Spacial Blur
 stimParams.Gsig = 0;
@@ -40,7 +41,7 @@ stimParams.duration = 0.5; % seconds
 stimParams.refColor = [0.5 0.5 0.5]';
 
 % init isi
-stimParams.isi = 0.1;
+stimParams.isi = 0.01;
 
 %% Parse varargin and set to stimParams
 for i = 1 : 2 : length(varargin)

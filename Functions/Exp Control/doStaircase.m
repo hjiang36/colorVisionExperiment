@@ -565,7 +565,7 @@ dataSum(1).abort = false;
 
 % Show customized instruction sceen
 eval(instructions);
-
+tic
 % Main staircase loop
 while ~all(stairHistory.done) && ~abort
     % build the trial
@@ -828,6 +828,18 @@ while ~all(stairHistory.done) && ~abort
     if(~all(stairHistory.done) && ~abort && interval<stairParams.iti)
         waitTill(stairParams.iti-interval);
     end
+    
+    % Check if subject needs to take a break
+    if toc > 900
+        reversalsDone = mean(stairHistory.numReversals) / ...
+                            stairParams.maxNumReversals;
+        promptStr = sprintf(['You have done %d percent of experiment\n' ...
+            'Please take a break and Press any key to continue'],...
+            round(reversalsDone*100));
+        pressKey2Begin(display, 1, 0, promptStr);
+        tic
+    end
+    save deleteMe.mat
 end
 
 if stairParams.initTrialCount==1 || stairParams.initTrialCount==0

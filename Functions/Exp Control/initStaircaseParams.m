@@ -31,15 +31,15 @@ stairParams.responseSet             = 'zx';
 
 % Parameter for each staircase separately
 stairParams.curStairVars            = {'direction',...
-    [0 30 45 75 105 120 135 150 -30 -45 -75 -105 -120 -135 -150]};
+    [30 45 75 105 135 150 -30 -45 -75 -105 -135 -150]};
 
 % Variable adjusted by staircase
 stairParams.adjustableVarName       = 'dContrast';
-stairParams.adjustableVarValues     = (0.1 : 0.1 : 3) / 100;
+stairParams.adjustableVarValues     = (0.05 : 0.05 : 7) / 100;
 
 % Set starting value, use 10 here
 stairParams.adjustableVarStart      = ...
-            repmat(10, size(stairParams.curStairVars{2}));
+            repmat(45, size(stairParams.curStairVars{2}));
 
 
 % Randomly vary the value
@@ -53,7 +53,7 @@ stairParams.numIncorrectForStep     = 1;
 stairParams.maxNumTrials            = 120;
 
 % end expt after this many reversals
-stairParams.maxNumReversals         = 12;
+stairParams.maxNumReversals         = 10;
 
 % increment size for each successive reversal 
 stairParams.correctStepSize         = [-6 -4 -3 -3 -2 -1];

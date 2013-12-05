@@ -57,15 +57,18 @@ end
 %  Create reference stimulus
 refStim = createStimulusStruct(refImg,cmap,[],stimParams.duration);
 refStim = createTextures(display, refStim);
+%disp(['Ref Color:' num2str(unique(refImg(:,:,1))')]);
 
 %  Create match stimulus
 matchStim = createStimulusStruct(matchImg,cmap,[],stimParams.duration);
 matchStim = createTextures(display, matchStim);
 
+%disp(['Match Color:' num2str(unique(matchImg(:,:,1))')]);
+
 %% Create blank stim
 blankIm         = refImg;
 for i = 1 : 3
-    blankIm(:,:,i)  = display.backColorRgb(i);
+    blankIm(:,:,i)  = display.backColorRgb(i).^(1/2.1);
 end
 
 blankStim = createStimulusStruct(blankIm, cmap);

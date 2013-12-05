@@ -33,7 +33,7 @@ if isfield(d, 'fixGrid') && d.fixGrid==1
 		
 	for th = rangeTheta
         col = d.backColorIndex + 20;
-		[x y] = pol2cart(deg2rad(th), maxR);
+		[x,y] = pol2cart(deg2rad(th), maxR);
 		x = x + cenX;
 		y = y + cenY;
 		Screen('DrawLine', d.windowPtr, col, cenX, cenY, x, y);
@@ -66,7 +66,7 @@ switch(lower(d.fixType))
             
     % no task (colIndex) for large crosses
     case {'large cross' , 'largecross','large cross x+','largecrossx+'},
-		if numel(d.fixCoords) > 1, colIndex2=colIndex; else, colIndex2 = 1; end;
+		if numel(d.fixCoords) > 1, colIndex2=colIndex; else colIndex2 = 1; end;
         if iscell(d.fixCoords)
             Screen('DrawDots', d.windowPtr, d.fixCoords{colIndex2}, d.fixSizePixels(colIndex2), d.fixColorRgb(colIndex,:));
         else

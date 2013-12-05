@@ -53,12 +53,12 @@ stimImg   = repmat(reshape(refColor,[1 1 3]),stimHeight,stimWidth);
 
 %  Compute gap position
 gapSize = stimParams.gapSize;
-gapL    = floor((0.5-gapSize/2)*stimWidth);
-gapR    = floor((0.5+gapSize/2)*stimWidth);
+gapL    = floor((0.5-gapSize/2)*stimHeight);
+gapR    = floor((0.5+gapSize/2)*stimHeight);
 
 %  Set gap color
 for i = 1 : 3
-    stimImg(:, gapL +1:gapR,i)  = stimParams.bgColor(i);
+    stimImg(gapL +1:gapR, :,i)  = stimParams.bgColor(i);
 end
 
 %% Make match stimulus
@@ -68,14 +68,14 @@ matchContrast  = refContrast + stimParams.dContrast * dir;
 matchColor     = coneContrast2RGB(display,matchContrast);
 
 %  Set color to corresponding positions in stimIm
-if stimParams.MatchingSlot == '1' % Set to left
-    stimImg(:,1:gapL,1)   = matchColor(1);
-    stimImg(:,1:gapL,2)   = matchColor(2);
-    stimImg(:,1:gapL,3)   = matchColor(3);
-else % Set to right
-    stimImg(:,gapR+1:end,1) = matchColor(1);
-    stimImg(:,gapR+1:end,2) = matchColor(2);
-    stimImg(:,gapR+1:end,3) = matchColor(3);
+if stimParams.MatchingSlot == '1' % Set to up
+    stimImg(1:gapL,:,1)   = matchColor(1);
+    stimImg(1:gapL,:,2)   = matchColor(2);
+    stimImg(1:gapL,:,3)   = matchColor(3);
+else % Set to down
+    stimImg(gapR+1:end,:,1) = matchColor(1);
+    stimImg(gapR+1:end,:,2) = matchColor(2);
+    stimImg(gapR+1:end,:,3) = matchColor(3);
 end
 
 %%  Blur stimulus if needed
@@ -89,17 +89,16 @@ if ~isfield(stimParams, 'duration')
     stimParams.duration = [];
 end
 
-stimulus = createStimulusStruct(stimImg,cmap,[],stimParams.duration);
+stimulus = createStimulusStruct(stimImg.^(1/2.1),cmap,[],stimParams.duration);
 
-% Possibly, I should create a createTextures routine here
-stimulus.textures=Screen('MakeTexture',display.windowPtr,stimImg,[],[],2);
-stimulus.images = []; % free space for images
+% Create textures
+stimulus = createTextures(display, stimulus);
 
 %% Make blank stimulus
 blankIm   = repmat(reshape(stimParams.bgColor,[1 1 3]),...
-                   stimHeight,stimWidth);
+                   stimHeight,stimWidth).^(1/2.1);
 blankStim = createStimulusStruct(blankIm,cmap);
-blankStim.textures=Screen('MakeTexture',display.windowPtr,blankIm,[],[],2);
+blankStim = createTextures(display, blankStim);
 
 
 isi.sound = soundFreqSweep(500, 1000, .05);
@@ -109,7 +108,7 @@ isi.sound = soundFreqSweep(500, 1000, .05);
 trial = addTrialEvent(display,[],'soundEvent',isi );
 trial = addTrialEvent(display,trial,'stimulusEvent', 'stimulus', stimulus);
 trial = addTrialEvent(display,trial,'ISIEvent', 'stimulus', blankStim,...
-                                    'duration', 0.5);
+                                    'duration', 0.1);
 
 stat = 'done';
 end

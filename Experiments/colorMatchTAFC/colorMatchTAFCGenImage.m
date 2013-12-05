@@ -44,16 +44,16 @@ end
 if ~isfield(params, 'refImage') || strcmp(type, 'ref')
     %  Generate reference patch image
     refColor = params.refColor;
-    refImg   = repmat(reshape(refColor,[1 1 3]),stimHeight,stimWidth);
+    refImg   = repmat(reshape(refColor,[1 1 3]).^(1/2.1),stimHeight,stimWidth);
     
     % Compute gap size and position
     gapSize = params.gapSize;
-    gapL    = floor((0.5-gapSize/2)*stimWidth);
-    gapR    = floor((0.5+gapSize/2)*stimWidth);
+    gapL    = floor((0.5-gapSize/2)*stimHeight);
+    gapR    = floor((0.5+gapSize/2)*stimHeight);
     
     %  Set gap color
     for i = 1 : 3
-        refImg(:, gapL +1:gapR,i)  = params.bgColor(i);
+        refImg(gapL +1:gapR,:, i)  = params.bgColor(i).^(1/2.1);
     end
     
     params.refImg = refImg;
@@ -69,18 +69,22 @@ if strcmp(type, 'match')
     matchContrast  = refContrast + params.dContrast * dir;
     matchColor     = coneContrast2RGB(display,matchContrast);
     
-    params.matchImg = refImg;
+    matchColor = matchColor.^(1/2.1);
     
+    params.matchImg = refImg;
+%     for i = 1 : 3
+%         params.matchImg(:,:,i) = matchColor(i);
+%     end
     % Replace either left/right patch to match color
-    if rand > 0.5
-        for i = 1 : 3
-            params.matchImg(:,1:gapL,i)   = matchColor(i);
-        end
-    else
-        for i = 1 : 3
-            params.matchImg(:,gapR+1:end,i) = matchColor(i);
-        end
-    end
+     if rand > 0.5
+         for i = 1 : 3
+             params.matchImg(1:gapL,:,i)   = matchColor(i);
+         end
+     else
+         for i = 1 : 3
+             params.matchImg(gapR+1:end,:,i) = matchColor(i);
+         end
+     end
 end
 
 end

@@ -105,14 +105,13 @@ try
     % Load linearlized gamma table
     Screen('LoadNormalizedGammaTable',display.screenNumber, ...
             repmat(linspace(0,1,256)', [1 3]));
+    %LoadIdentityClut(display.windowPtr);
 catch ME
     warning(ME.identifier, ME.message)
     % 10 bit gamma table not supported, reduce it to 8 bit
     pGamma = display.gamma(round(linspace(1,size(display.gamma,1),256)),:);
     Screen('LoadNormalizedGammaTable', display.screenNumber,pGamma);
-end;
-
-WaitSecs(2);
+end
 
 % Check again if resolution got set
 % newSettings = Screen('Resolution', display.screenNumber);
@@ -131,8 +130,11 @@ WaitSecs(2);
 
 %% Open PTB Screen
 if bitDepth == 8 % Open screen for 8 bit
-    [display.windowPtr,display.rect] = Screen('OpenWindow', ...
-        display.screenNumber,display.backColorRgb, [],[], numBuffers);
+    %[display.windowPtr,display.rect] = Screen('OpenWindow', ...
+    %    display.screenNumber,display.backColorRgb, [],[], numBuffers);
+    BitsPlusPlus('SetColorConversionMode', 0);
+    [display.windowPtr,display.rect]=BitsPlusPlus('OpenWindowColor++', ...
+        display.screenNumber,display.backColorRgb.^(1/2.1), [],[], numBuffers);
 else % Open screen for 10 bit
     PsychImaging('PrepareConfiguration');
 	PsychImaging('AddTask', 'General', 'FloatingPoint32BitIfPossible');
@@ -148,5 +150,6 @@ if(hideCursorFlag), HideCursor;  end
 
 % Flip and show
 Screen('Flip', display.windowPtr);
+%LoadIdentityClut(display.windowPtr);
 
 end

@@ -45,4 +45,4 @@ if ~isfield(display, 'numPixels')
     display.numPixels = [screenRes.width screenRes.height];
 end
 display.radius = pix2angle(display,floor(min(display.numPixels)/2));
-display.backColorRgb = [0.5 0.5 0.5]'*255; % set it to gray
+display.backColorRgb = [0.5 0.5 0.5]'; % set it to gray
