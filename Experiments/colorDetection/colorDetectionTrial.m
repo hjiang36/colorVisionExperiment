@@ -25,7 +25,7 @@ if nargin < 2, error('Stimulus parameter structure required'); end
 %% Init parameters
 cmap  = displayGet(display,'gamma table');
 angle = deg2rad(stimParams.direction);
-dir   = [cos(angle) sin(angle) 0]';
+dir   = [cos(angle) 0 sin(angle)]';
 
 if ~isfield(stimParams, 'duration')
     stimParams.duration = 0.5; % Default to .5 seconds
@@ -89,14 +89,14 @@ if ~isfield(stimParams, 'duration')
     stimParams.duration = [];
 end
 
-stimulus = createStimulusStruct(stimImg.^(1/2.1),cmap,[],stimParams.duration);
+stimulus = createStimulusStruct(stimImg.^(1/2.24),cmap,[],stimParams.duration);
 
 % Create textures
 stimulus = createTextures(display, stimulus);
 
 %% Make blank stimulus
 blankIm   = repmat(reshape(stimParams.bgColor,[1 1 3]),...
-                   stimHeight,stimWidth).^(1/2.1);
+                   stimHeight,stimWidth).^(1/2.24);
 blankStim = createStimulusStruct(blankIm,cmap);
 blankStim = createTextures(display, blankStim);
 

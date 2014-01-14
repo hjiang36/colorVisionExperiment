@@ -51,9 +51,9 @@ else
     stimParams = initStimParams('cbType', subjectParams.cbType);
 end
 
-stimParams.refColor = [0.7613 0.4528 0.4987]'; % L cone contrast: [0.1 0 0]
+%stimParams.refColor = [0.7613 0.4528 0.4987]'; % L cone contrast: [0.1 0 0]
 %stimParams.refColor = [0.2777 0.6124 0.4934]'; % M cone contrast: [0 0.1 0]
-%stimParams.refColor = [0.5390 0.5651 0.4921]'; % L+M cone contrast [.1 .1 0]
+stimParams.refColor = [0.5346 0.5675 0.4945]'; % L+M cone contrast [.1 .1 0]
 
 display       = initFixParams(display,0.25); % fixation fov to 0.25
 %display.fixType = 'none';

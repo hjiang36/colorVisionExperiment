@@ -69,7 +69,7 @@ if strcmp(type, 'match')
     matchContrast  = refContrast + params.dContrast * dir;
     matchColor     = coneContrast2RGB(display,matchContrast);
     
-    matchColor = matchColor.^(1/2.1);
+    matchColor = matchColor.^(1/2.24);
     
     params.matchImg = refImg;
 %     for i = 1 : 3

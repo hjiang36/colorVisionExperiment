@@ -39,7 +39,7 @@ stairParams.adjustableVarValues     = (0.05 : 0.05 : 7) / 100;
 
 % Set starting value, use 10 here
 stairParams.adjustableVarStart      = ...
-            repmat(45, size(stairParams.curStairVars{2}));
+            repmat(60, size(stairParams.curStairVars{2}));
 
 
 % Randomly vary the value
