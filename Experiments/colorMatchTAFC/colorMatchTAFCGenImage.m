@@ -62,7 +62,7 @@ end
 %% Generate match image if needed
 if strcmp(type, 'match')
     angle = deg2rad(params.direction);
-    dir   = [cos(angle) sin(angle) 0]';
+    dir   = [0 cos(angle) sin(angle)]';
     
     % Compute match color
     refContrast    = RGB2ConeContrast(display, refColor);

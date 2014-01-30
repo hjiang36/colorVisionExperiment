@@ -25,7 +25,7 @@ if nargin < 2, error('Stimulus parameter structure required'); end
 %% Init parameters
 cmap  = displayGet(display,'gamma table');
 angle = deg2rad(stimParams.direction);
-dir   = [cos(angle) 0 sin(angle)]';
+dir   = [0 cos(angle) sin(angle)]';
 
 if ~isfield(stimParams, 'duration')
     stimParams.duration = 0.5; % Default to .5 seconds
