@@ -67,12 +67,8 @@ refContrast    = RGB2ConeContrast(display, refColor);
 matchContrast  = refContrast + stimParams.dContrast * dir;
 matchColor     = coneContrast2RGB(display,matchContrast);
 
-cbType = 1;
 matchColorXYZ  = matchColor(:)' * displayGet(display, 'rgb2xyz');
-matchColorLMS  = xyz2lms(reshape(matchColorXYZ,[1 1 3]), cbType);
-matchColorXYZ  = lms2xyz(matchColorLMS(:));
-matchColor = matchColorXYZ(:)' * displayGet(display, 'rgb2xyz');
-matchColor = matchColor(:);
+matchColorLMS  = xyz2lms(reshape(matchColorXYZ,[1 1 3]), 
 
 %  Set color to corresponding positions in stimIm
 if stimParams.MatchingSlot == '1' % Set to up
