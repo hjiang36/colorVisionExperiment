@@ -134,13 +134,13 @@ if bitDepth == 8 % Open screen for 8 bit
     %    display.screenNumber,display.backColorRgb, [],[], numBuffers);
     BitsPlusPlus('SetColorConversionMode', 0);
     [display.windowPtr,display.rect]=BitsPlusPlus('OpenWindowColor++', ...
-        display.screenNumber,display.backColorRgb.^(1/2.24), [],[], numBuffers);
+        display.screenNumber,display.backColorRgb.^(1/2.3), [],[], numBuffers);
 else % Open screen for 10 bit
     PsychImaging('PrepareConfiguration');
 	PsychImaging('AddTask', 'General', 'FloatingPoint32BitIfPossible');
     PsychImaging('AddTask', 'General', 'EnableNative10BitFrameBuffer');
     [display.windowPtr,display.rect] = PsychImaging('OpenWindow', ...
-        display.screenNumber,display.backColorRgb.^(1/2.24), [],[], numBuffers);
+        display.screenNumber,display.backColorRgb.^(1/2.3), [],[], numBuffers);
 end
 
 %% Handle cursor and fixation

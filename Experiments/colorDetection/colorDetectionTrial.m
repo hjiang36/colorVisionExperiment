@@ -69,9 +69,9 @@ matchColor     = coneContrast2RGB(display,matchContrast);
 
 cbType = 1;
 matchColorXYZ  = matchColor(:)' * displayGet(display, 'rgb2xyz');
-matchColorLMS  = xyz2lms(reshape(matchColorXYZ,[1 1 3]), cbType);
-matchColorXYZ  = lms2xyz(matchColorLMS(:));
-matchColor = matchColorXYZ(:)' * displayGet(display, 'rgb2xyz');
+matchColorLMS  = xyz2lms(reshape(matchColorXYZ,[1 1 3]), cbType, displayGet(display, 'whitepoint'));
+matchColorXYZ  = lms2xyz(matchColorLMS);
+matchColor = matchColorXYZ(:)' * inv(displayGet(display, 'rgb2xyz'));
 matchColor = matchColor(:);
 
 %  Set color to corresponding positions in stimIm
@@ -96,14 +96,15 @@ if ~isfield(stimParams, 'duration')
     stimParams.duration = [];
 end
 
-stimulus = createStimulusStruct(stimImg.^(1/2.24),cmap,[],stimParams.duration);
+%2.24?
+stimulus = createStimulusStruct(stimImg.^(1/2.3),cmap,[],stimParams.duration);
 
 % Create textures
 stimulus = createTextures(display, stimulus);
 
 %% Make blank stimulus
 blankIm   = repmat(reshape(stimParams.bgColor,[1 1 3]),...
-                   stimHeight,stimWidth).^(1/2.24);
+                   stimHeight,stimWidth).^(1/2.3);
 blankStim = createStimulusStruct(blankIm,cmap);
 blankStim = createTextures(display, blankStim);
 
