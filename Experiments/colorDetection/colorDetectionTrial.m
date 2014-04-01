@@ -25,7 +25,7 @@ if nargin < 2, error('Stimulus parameter structure required'); end
 %% Init parameters
 cmap  = displayGet(display,'gamma table');
 angle = deg2rad(stimParams.direction);
-dir   = [0 cos(angle) sin(angle)]';
+dir   = [cos(angle) sin(angle) 0]';
 
 if ~isfield(stimParams, 'duration')
     stimParams.duration = 0.5; % Default to .5 seconds
@@ -65,13 +65,16 @@ end
 %  Compute match color
 refContrast    = RGB2ConeContrast(display, refColor);
 matchContrast  = refContrast + stimParams.dContrast * dir;
-matchColor     = coneContrast2RGB(display,matchContrast);
+[matchColor, bgLMS] = coneContrast2RGB(display,matchContrast);
 
 cbType = 1;
-matchColorXYZ  = matchColor(:)' * displayGet(display, 'rgb2xyz');
-matchColorLMS  = xyz2lms(reshape(matchColorXYZ,[1 1 3]), cbType, displayGet(display, 'whitepoint'));
-matchColorXYZ  = lms2xyz(matchColorLMS);
-matchColor = matchColorXYZ(:)' * inv(displayGet(display, 'rgb2xyz'));
+matchLMS = (matchContrast + 1) .* bgLMS;
+%matchColorXYZ  = matchColor(:)' * displayGet(display, 'rgb2xyz');
+%matchColorLMS  = xyz2lms(reshape(matchColorXYZ,[1 1 3]), cbType, displayGet(display, 'whitepoint'));
+%matchColorXYZ  = lms2xyz(matchColorLMS);
+%matchColor = matchColorXYZ(:)' * inv(displayGet(display, 'rgb2xyz'));
+matchColorLMS = brettelColorTransform(reshape(matchLMS, [1 1 3]), cbType, displayGet(display, 'whitepoint'));
+matchColor = coneContrast2RGB(display, matchColorLMS(:)./bgLMS -1);
 matchColor = matchColor(:);
 
 %  Set color to corresponding positions in stimIm
