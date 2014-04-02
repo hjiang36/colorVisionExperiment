@@ -67,7 +67,7 @@ refContrast    = RGB2ConeContrast(display, refColor);
 matchContrast  = refContrast + stimParams.dContrast * dir;
 [matchColor, bgLMS] = coneContrast2RGB(display,matchContrast);
 
-cbType = 1;
+cbType = 2;
 matchLMS = (matchContrast + 1) .* bgLMS;
 %matchColorXYZ  = matchColor(:)' * displayGet(display, 'rgb2xyz');
 %matchColorLMS  = xyz2lms(reshape(matchColorXYZ,[1 1 3]), cbType, displayGet(display, 'whitepoint'));
