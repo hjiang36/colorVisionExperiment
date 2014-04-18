@@ -67,13 +67,16 @@ refContrast    = RGB2ConeContrast(display, refColor);
 matchContrast  = refContrast + stimParams.dContrast * dir;
 [matchColor, bgLMS] = coneContrast2RGB(display,matchContrast);
 
-cbType = 2;
+cbType = 1;
 matchLMS = (matchContrast + 1) .* bgLMS;
 %matchColorXYZ  = matchColor(:)' * displayGet(display, 'rgb2xyz');
 %matchColorLMS  = xyz2lms(reshape(matchColorXYZ,[1 1 3]), cbType, displayGet(display, 'whitepoint'));
 %matchColorXYZ  = lms2xyz(matchColorLMS);
 %matchColor = matchColorXYZ(:)' * inv(displayGet(display, 'rgb2xyz'));
-matchColorLMS = brettelColorTransform(reshape(matchLMS, [1 1 3]), cbType, displayGet(display, 'whitepoint'));
+%matchColorLMS = xyz2lms(lms2xyz(reshape(matchLMS,[1 1 3])),cbType,displayGet(display, 'whitepoint'));
+%matchContrast = matchColorLMS(:)./bgLMS -1;
+%matchColor = coneContrast2RGB(display,matchContrast);
+matchColorLMS = brettelColorTransform(reshape(matchLMS, [1 1 3]), cbType, bgLMS);
 matchColor = coneContrast2RGB(display, matchColorLMS(:)./bgLMS -1);
 matchColor = matchColor(:);
 

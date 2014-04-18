@@ -1,4 +1,4 @@
-function imgLMS = brettelColorTransform(imgLMS, cbType, whiteXYZ)
+function imgLMS = brettelColorTransform(imgLMS, cbType, whiteLMS)
 %% function brettelColorTransform(LMS, cbType)
 %    This function implements brettel's color transform algorithm (1997)
 %    A similar function could be found in xyz2lms
@@ -10,7 +10,7 @@ function imgLMS = brettelColorTransform(imgLMS, cbType, whiteXYZ)
 if notDefined('imgLMS'), error('LMS color required'); end
 if notDefined('cbType'), error('cbType required'); end
 
-anchor_e = reshape(whiteXYZ, [1 3]) * colorTransformMatrix('xyz2lms');
+anchor_e = whiteLMS;
 
 % These anchor values are derived in the paper and used to compute the
 % missing cone value.  At the moment, they are sometimes negative, sigh.
