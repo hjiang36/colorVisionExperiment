@@ -74,6 +74,7 @@ save(dataFileName, 'expResult');
 %  fitting
 threshColor = zeros(2, length(expResult));
 refLMS = RGB2ConeContrast(display, stimParams.refColor);
+%refLMS = [0.1 0.1 0]';
 for curStair = 1 : length(expResult)
     sData = expResult(curStair);
     dir = deg2rad(stairParams.curStairVars{2}(curStair));
@@ -96,10 +97,10 @@ hf = figure('NumberTitle', 'off', ...
 grid on; xlabel('L'); ylabel('S');
 plot(threshColor(1,:), threshColor(2,:), 'ro');
 
-%if subjectParams.cbType == 0
-%    [zg, ag, bg, alphag] = fitellipse(threshColor);
-%    plotellipse(zg, ag, bg, alphag, 'b--')
-%end
+if subjectParams.cbType == 0
+   [zg, ag, bg, alphag] = fitellipse(threshColor);
+   plotellipse(zg, ag, bg, alphag, 'b--')
+end
 
 axis equal;
 
