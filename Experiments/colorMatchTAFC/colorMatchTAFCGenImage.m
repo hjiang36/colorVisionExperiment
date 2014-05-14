@@ -44,7 +44,17 @@ end
 if ~isfield(params, 'refImage') || strcmp(type, 'ref')
     %  Generate reference patch image
     refColor = params.refColor;
-    refImg   = repmat(reshape(refColor,[1 1 3]).^(1/2.1),stimHeight,stimWidth);
+    
+    refContrast = RGB2ConeContrast(display, refColor);
+    [~,bgLMS] = coneContrast2RGB(display, refContrast);
+    
+    cbType = 2;
+    refLMS = (refContrast + 1) .* bgLMS;
+    refColorLMS = brettelColorTransform(reshape(refLMS, [1 1 3]), cbType, bgLMS);
+    refColor = coneContrast2RGB(display, refColorLMS(:)./bgLMS -1);
+    refColor = refColor(:);
+    
+    refImg   = repmat(reshape(refColor,[1 1 3]).^(1/2.3),stimHeight,stimWidth);
     
     % Compute gap size and position
     gapSize = params.gapSize;
@@ -53,7 +63,7 @@ if ~isfield(params, 'refImage') || strcmp(type, 'ref')
     
     %  Set gap color
     for i = 1 : 3
-        refImg(gapL +1:gapR,:, i)  = params.bgColor(i).^(1/2.1);
+        refImg(gapL +1:gapR,:, i)  = params.bgColor(i).^(1/2.3);
     end
     
     params.refImg = refImg;
@@ -62,14 +72,20 @@ end
 %% Generate match image if needed
 if strcmp(type, 'match')
     angle = deg2rad(params.direction);
-    dir   = [0 cos(angle) sin(angle)]';
+    dir   = [cos(angle) sin(angle) 0]';
     
     % Compute match color
     refContrast    = RGB2ConeContrast(display, refColor);
     matchContrast  = refContrast + params.dContrast * dir;
-    matchColor     = coneContrast2RGB(display,matchContrast);
+    [matchColor,bgLMS] = coneContrast2RGB(display,matchContrast);
     
-    matchColor = matchColor.^(1/2.24);
+    cbType = 2;
+    matchLMS = (matchContrast + 1) .* bgLMS;
+    matchColorLMS = brettelColorTransform(reshape(matchLMS, [1 1 3]), cbType, bgLMS);
+    matchColor = coneContrast2RGB(display, matchColorLMS(:)./bgLMS -1);
+    matchColor = matchColor(:);
+    
+    matchColor = matchColor.^(1/2.3);
     
     params.matchImg = refImg;
 %     for i = 1 : 3

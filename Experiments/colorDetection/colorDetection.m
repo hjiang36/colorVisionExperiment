@@ -93,7 +93,7 @@ save(dataFileName, 'expResult');
 hf = figure('NumberTitle', 'off', ...
        'Name', 'Color Contour', ...
        'Visible', 'off'); hold on;
-grid on; xlabel('L'); ylabel('M');
+grid on; xlabel('L'); ylabel('S');
 plot(threshColor(1,:), threshColor(2,:), 'ro');
 
 %if subjectParams.cbType == 0
@@ -103,7 +103,7 @@ plot(threshColor(1,:), threshColor(2,:), 'ro');
 
 axis equal;
 
-figureFileName = fullfile(subjectParams.dataDir, 'colorDetectContour.png');
+figureFileName = fullfile(subjectParams.dataDir, 'colorMatchContour.png');
 saveas(hf, figureFileName);
 close(hf);
 

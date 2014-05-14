@@ -112,10 +112,10 @@ hf = figure('NumberTitle', 'off', ...
 grid on; xlabel('L'); ylabel('M');
 plot(threshColor(1,:), threshColor(2,:), 'ro');
 
-if subjectParams.cbType == 0
-    [zg, ag, bg, alphag] = fitellipse(threshColor);
-    plotellipse(zg, ag, bg, alphag, 'b--')
-end
+% if subjectParams.cbType == 0
+%     [zg, ag, bg, alphag] = fitellipse(threshColor);
+%     plotellipse(zg, ag, bg, alphag, 'b--')
+% end
 
 axis equal;
 

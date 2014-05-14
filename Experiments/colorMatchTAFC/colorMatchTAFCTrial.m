@@ -68,7 +68,7 @@ matchStim = createTextures(display, matchStim);
 %% Create blank stim
 blankIm         = refImg;
 for i = 1 : 3
-    blankIm(:,:,i)  = display.backColorRgb(i).^(1/2.24);
+    blankIm(:,:,i)  = display.backColorRgb(i).^(1/2.3);
 end
 
 blankStim = createStimulusStruct(blankIm, cmap);
