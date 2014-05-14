@@ -38,7 +38,7 @@ stimParams.Gsig = 0;
 stimParams.duration = 0.5; % seconds
 
 % init reference color
-stimParams.refColor = [0.5 0.5 0.5]';
+stimParams.refColor = [0.5346    0.5675    0.4945]';
 
 % init isi
 stimParams.isi = 0.01;
