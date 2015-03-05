@@ -19,6 +19,7 @@ fileName = fullfile(colorVisionExperimentRootPath, 'Exp Data', ...
 load(fileName);
 direction = [30 45 75 105 135 150 -30 -45 -75 -105 -135 -150];
 pCorrect = 0.5:0.01:0.99;
+refContrast = [0 0 0]';
 
 %% Plot for each direction
 % open new figure window
@@ -31,7 +32,8 @@ for ii = 1 : length(expResult)
     title(sprintf('Direction:%d', direction(ii)));
     
     sData = expResult(ii);
-    dir = direction(ii);
+    dir = deg2rad(direction(ii));
+    dir = [cos(dir) 0 sin(dir)];
     indx = sData.numTrials > 3;
     
     % Weibull fit
@@ -41,6 +43,11 @@ for ii = 1 : length(expResult)
     
     % plot fitted curve
     plot(alpha*(-log(2*(1-pCorrect))).^(1/beta), pCorrect);
+    
+    % convert contrast (stimLevels) to deltaE value
+    %
+    %
+    %
     
     % scatter plot points
     scatter(sData.stimLevels(indx), ...
