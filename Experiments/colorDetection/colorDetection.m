@@ -73,34 +73,36 @@ save(dataFileName, 'expResult');
 %% Weibull fit and Visualization
 %  fitting
 threshColor = zeros(2, length(expResult));
-refLMS = RGB2ConeContrast(display, stimParams.refColor);
-%refLMS = [0.1 0.1 0]';
-
+% refLMS = RGB2ConeContrast(display, stimParams.refColor);
+% refLMS = [0.1 0.1 0]';
+refLMS = [0 0 0]';
 pCorrect = 0.5:0.01:0.99;
 for curStair = 1 : length(expResult)
-    %subplot(3,4,curStair); hold on;
-    %ha{curStair} = gca;
+    subplot(3,4,curStair); hold on; grid on;
+    ha{curStair} = gca;
     sData = expResult(curStair);
     dir = deg2rad(stairParams.curStairVars{2}(curStair));
     indx = sData.numTrials > 0;
     % Weibull fit
-    %[alpha,beta,~] = FitWeibAlphTAFC(sData.stimLevels(indx), ...
-    %    sData.numCorrect(indx), sData.numTrials(indx) - ...
-    %    sData.numCorrect(indx),[],4);
-    [mu, sd] = bootWeibullFit(sData.stimLevels(indx), ...
-        sData.numCorrect(indx), sData.numTrials(indx), [], 4);
-    alpha = mu(1); beta = mu(2);
-    plot(alpha*(-log(2*(1-pCorrect))).^(1/beta), pCorrect, 'r',...
+    [alpha,beta,~] = FitWeibAlphTAFC(sData.stimLevels(indx), ...
+        sData.numCorrect(indx), sData.numTrials(indx) - ...
+        sData.numCorrect(indx),[],2.2);
+    %[mu, sd] = bootWeibullFit(sData.stimLevels(indx), ...
+    %    sData.numCorrect(indx), sData.numTrials(indx), [], 4);
+    %alpha = mu(1); beta = mu(2);
+    plot(alpha*(-log(2*(1-pCorrect))).^(1/beta), pCorrect, 'k',...
         'Parent', ha{curStair}); hold on;
-    alpha = alpha + 1.96 * sd(1);
-    plot(alpha*(-log(2*(1-pCorrect))).^(1/beta), pCorrect, '--r',...
-        'Parent', ha{curStair}); hold on;
-    alpha = alpha - 2*1.96*sd(1);
-    plot(alpha*(-log(2*(1-pCorrect))).^(1/beta), pCorrect, '--r',...
-        'Parent', ha{curStair}); hold on;
+    a(curStair) = alpha; b(curStair) = beta;
+    %alpha = alpha + 1.96 * sd(1);
+    %plot(alpha*(-log(2*(1-pCorrect))).^(1/beta), pCorrect, '--r',...
+    %    'Parent', ha{curStair}); hold on;
+    %alpha = alpha - 2*1.96*sd(1);
+    %plot(alpha*(-log(2*(1-pCorrect))).^(1/beta), pCorrect, '--r',...
+    %    'Parent', ha{curStair}); hold on;
     plot(sData.stimLevels(indx), ...
-        sData.numCorrect(indx)./sData.numTrials(indx),'.r', ...
+        sData.numCorrect(indx)./sData.numTrials(indx),'.k', ...
         'Parent', ha{curStair});
+    axis([0 0.03 0.5 1]);
     drawnow;
     thresh = FindThreshWeibTAFC(0.75,alpha,beta);
     threshColor(:,curStair) = refLMS(1:2) + thresh * [cos(dir) sin(dir)]';
