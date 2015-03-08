@@ -25,6 +25,15 @@ if notDefined('bgColor'), bgColor = [0.5 0.5 0.5]; end % half gray
 %  Compute stimulus contrast
 sContrast = contrast * dir;
 
+switch cbType
+    case 1
+        sContrast(1) = 1.3855*sContrast(2) - 0.285*sContrast(3);
+    case 2
+        sContrast(2) = 0.6949*sContrast(1) + 0.2614*sContrast(3);
+    case 3
+        sContrast(3) = -0.9623*sContrast(1) + 1.7595 * sContrast(2);
+end
+
 %  Compute background RGB values
 sRGB = coneContrast2RGB(d, sContrast, bgColor);
 
@@ -33,8 +42,8 @@ sXYZ  = sRGB(:)' * displayGet(d, 'rgb2xyz');
 bgXYZ = bgColor(:)' * displayGet(d, 'rgb2xyz');
 
 %  Convert for colorblind
-sXYZ  = lms2xyz(xyz2lms(reshape(sXYZ, [1 1 3]), cbType, bgXYZ));
-bgXYZ = lms2xyz(xyz2lms(reshape(bgXYZ, [1 1 3]), cbType, bgXYZ));
+% sXYZ  = lms2xyz(xyz2lms(reshape(sXYZ, [1 1 3]), cbType, bgXYZ));
+% bgXYZ = lms2xyz(xyz2lms(reshape(bgXYZ, [1 1 3]), cbType, bgXYZ));
 
 %% Compute deltaEab value
 deltaE = deltaEab(sXYZ, bgXYZ, bgXYZ);

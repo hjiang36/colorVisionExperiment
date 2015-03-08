@@ -30,9 +30,12 @@ control2 = load(fileName);
 
 % fileName = fullfile(colorVisionExperimentRootPath, 'Exp Data', ...
 %                      'expResults', 'rz', 'colorDetection_LS.mat');
+% fileName = fullfile(colorVisionExperimentRootPath, 'Exp Data', ...
+%                   'expResults', 'Final Results', 'Detection MS Plain',...
+%                    'colorDetection_Protanopia.mat');
 fileName = fullfile(colorVisionExperimentRootPath, 'Exp Data', ...
                    'expResults', 'Final Results', 'Detection MS Plain',...
-                    'colorDetection_Protanopia.mat');
+                    'colorDetection_JEF_Trichromats.mat');
 subjectData = load(fileName);
 
 direction = [30 45 75 105 135 150 -30 -45 -75 -105 -135 -150];
@@ -50,7 +53,7 @@ lineColorG = [27 158 119] / 255;
 lineColorGray = [0.5 0.5 0.5];
 
 % plot for each color direction
-for ii = 1 : length(expResult)
+for ii = 1 : length(direction)
     % create subplot
     subplot(3, 4, ii); grid on; hold on;
     title(sprintf('Direction:%d', direction(ii)));
@@ -71,7 +74,7 @@ for ii = 1 : length(expResult)
     for jj = 1 : length(xContrast)
         xDeltaE(jj) = coneContrast2DeltaEab(xContrast(jj), dir, d, cbType);
     end
-    plot(xDeltaE, pCorrect, 'lineWidth', 2, 'Color', lineColorG);
+    plot(xDeltaE, pCorrect, 'lineWidth', 2, 'Color', lineColorR);
     
     % convert contrast (stimLevels) to deltaE value
     idx = find(indx);
@@ -83,12 +86,10 @@ for ii = 1 : length(expResult)
     
     % scatter plot points
     scatter(xDeltaE, sData.numCorrect(indx)./sData.numTrials(indx), ...
-            sData.numTrials(indx) * 4, lineColorG);
+            sData.numTrials(indx) * 4, lineColorR);
         
         
     sData = control1.expResult(ii);
-    dir = deg2rad(direction(ii));
-    dir = [cos(dir) 0 sin(dir)];
     indx = sData.numTrials > 3;
     
     % Weibull fit
@@ -118,8 +119,6 @@ for ii = 1 : length(expResult)
         
         
     sData = control2.expResult(ii);
-    dir = deg2rad(direction(ii));
-    dir = [cos(dir) 0 sin(dir)];
     indx = sData.numTrials > 3;
     
     % Weibull fit
