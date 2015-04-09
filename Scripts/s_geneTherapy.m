@@ -37,7 +37,7 @@ wp = ieXYZFromEnergy(energy', wave);
 img_srgb_cb = cell(3, 1);
 for cbType = 1 : 3
     % convert to LMS
-    img_lms = xyz2lms(img_xyz, cbType, wp);
+    img_lms = xyz2lms(img_xyz, cbType, 'Brettel', wp);
 
     % convert back to srgb
     img_srgb_cb{cbType} = lms2srgb(img_lms);
