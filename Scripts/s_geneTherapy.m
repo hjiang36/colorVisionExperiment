@@ -69,7 +69,7 @@ img_rgb_GT_D = lms2srgb(img_lms_GT);
 subplot(2, 4, 7); imshow(img_rgb_GT_D);
 title('Deuteranopia (Linear)');
 
-%  compute for protanopia
+%  compute for tritanopia
 img_lms_GT = img_lms_T;
 img_lms_GT(:,:,3) = -0.9623 * img_lms_GT(:,:,1)+1.7595*img_lms_GT(:,:,2);
 img_rgb_GT_T = lms2srgb(img_lms_GT);
